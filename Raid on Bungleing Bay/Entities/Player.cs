@@ -34,6 +34,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             blade.AddAsChildOf(this);
             rotor.AddAsChildOf(this);
+            PO.Position.Z = 10;
             base.Initialize();
         }
 
@@ -43,7 +44,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             blade.LoadModel("Player-Blade");
             rotor.LoadModel("Player-Rotor");
             blade.PO.RotationVelocity.Z = 12;
-            rotor.PO.RotationVelocity.X = 12;
+            rotor.PO.RotationVelocity.X = 16;
 
             base.LoadContent();
         }
@@ -53,13 +54,13 @@ namespace Raid_on_Bungleing_Bay.Entities
             base.BeginRun();
             blade.PO.Position.Z = 6.5f;
             rotor.PO.Position.Z = 1;
-            rotor.PO.Position.Y = -20;
+            rotor.PO.Position.Y = -2;
         }
         #endregion
         #region Update
         public override void Update(GameTime gameTime)
         {
-            
+
             base.Update(gameTime);
         }
         #endregion

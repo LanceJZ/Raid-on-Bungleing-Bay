@@ -58,7 +58,7 @@ namespace Raid_on_Bungleing_Bay
 
         public void BeginRun()
         {
-            TheLand.Rotation.X = MathHelper.Pi;
+
         }
 
         public override void Update(GameTime gameTime)

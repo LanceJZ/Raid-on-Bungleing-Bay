@@ -38,8 +38,8 @@ namespace Raid_on_Bungleing_Bay
             Helper.Initialize(this, GDM);
             FPSTimer = new Timer(this, 1);
 
-            TheCamera = new Camera(this, new Vector3(0, 0, 500), new Vector3(0, MathHelper.Pi, 0),
-                GraphicsDevice.Viewport.AspectRatio, 100f, 1200f);
+            TheCamera = new Camera(this, new Vector3(0, 0, 100), new Vector3(0, MathHelper.Pi, 0),
+                GraphicsDevice.Viewport.AspectRatio, 1f, 1200f);
 
             TheGame = new GameLogic(this, TheCamera);
         }

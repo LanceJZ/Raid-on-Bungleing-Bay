@@ -22,7 +22,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         ModelEntity topLeft;
         ModelEntity bottomLeft;
         GameLogic LogicRef;
-
         #endregion
         #region Properties
 
@@ -70,14 +69,13 @@ namespace Raid_on_Bungleing_Bay.Entities
             bottomLeft.LoadModel("Land-5-Bottom left");
             topMid.LoadModel("Land-6-Top mid");
             topLeft.LoadModel("Land-7-Top left");
-            RotationVelocity.X = MathHelper.Pi;
+            Rotation.X = MathHelper.Pi / 2;
 
         }
         #endregion
         #region Update
         public override void Update(GameTime gameTime)
         {
-            Rotation.X = MathHelper.Pi;
 
             base.Update(gameTime);
         }
