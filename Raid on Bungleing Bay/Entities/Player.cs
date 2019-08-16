@@ -13,8 +13,9 @@ namespace Raid_on_Bungleing_Bay.Entities
     class Player : ModelEntity
     {
         #region Fields
+        ModelEntity blade;
+        ModelEntity rotor;
         GameLogic LogicRef;
-
         #endregion
         #region Properties
 
@@ -23,20 +24,26 @@ namespace Raid_on_Bungleing_Bay.Entities
         public Player(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
         {
             LogicRef = gameLogic;
-            Enabled = false;
-
+            Enabled = true;
+            blade = new ModelEntity(game, camera);
+            rotor = new ModelEntity(game, camera);
         }
         #endregion
         #region Initialize-Load-BeginRun
         public override void Initialize()
         {
-
+            blade.AddAsChildOf(this);
+            rotor.AddAsChildOf(this);
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            LoadModel("");
+            LoadModel("Player-Body");
+            blade.LoadModel("Player-Blade");
+            rotor.LoadModel("Player-Rotor");
+            blade.PO.RotationVelocity.Z = 12;
+            rotor.PO.RotationVelocity.X = 12;
 
             base.LoadContent();
         }
@@ -44,13 +51,15 @@ namespace Raid_on_Bungleing_Bay.Entities
         public override void BeginRun()
         {
             base.BeginRun();
-
+            blade.PO.Position.Z = 6.5f;
+            rotor.PO.Position.Z = 1;
+            rotor.PO.Position.Y = -20;
         }
         #endregion
         #region Update
         public override void Update(GameTime gameTime)
         {
-
+            
             base.Update(gameTime);
         }
         #endregion

@@ -88,7 +88,7 @@ namespace Panther
         /// </summary>
         void ConfirmExitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.Game.Exit();
+            //ScreenManager.Game.Exit();
         }
 
 

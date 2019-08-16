@@ -16,7 +16,7 @@ namespace Raid_on_Bungleing_Bay
         Camera TheCamera;
         Timer FPSTimer;
         KeyboardState OldKeyState;
-        float FPSFrames = 0;
+        //float FPSFrames = 0;
         bool PauseGame;
         bool NotFirstFrame;
 
@@ -25,8 +25,8 @@ namespace Raid_on_Bungleing_Bay
             GDM = new GraphicsDeviceManager(this);
             GDM.SynchronizeWithVerticalRetrace = true; //When true, 60FSP refresh rate locked.
             GDM.GraphicsProfile = GraphicsProfile.HiDef;
-            GDM.PreferredBackBufferWidth = 800;
-            GDM.PreferredBackBufferHeight = 600;
+            GDM.PreferredBackBufferWidth = 1200;
+            GDM.PreferredBackBufferHeight = 900;
             GDM.PreferMultiSampling = true; //Error in MonoGame 3.6 for DirectX, fixed in version 3.7.
             GDM.PreparingDeviceSettings += SetMultiSampling;
             GDM.ApplyChanges();
@@ -38,8 +38,8 @@ namespace Raid_on_Bungleing_Bay
             Helper.Initialize(this, GDM);
             FPSTimer = new Timer(this, 1);
 
-            TheCamera = new Camera(this, new Vector3(0, 0, 1082), new Vector3(0, MathHelper.Pi, 0),
-                GraphicsDevice.Viewport.AspectRatio, 900f, 1200f);
+            TheCamera = new Camera(this, new Vector3(0, 0, 500), new Vector3(0, MathHelper.Pi, 0),
+                GraphicsDevice.Viewport.AspectRatio, 100f, 1200f);
 
             TheGame = new GameLogic(this, TheCamera);
         }
@@ -57,8 +57,8 @@ namespace Raid_on_Bungleing_Bay
         /// </summary>
         protected override void Initialize()
         {
-            Helper.ScreenHeight = 600;
-            Helper.SreenWidth = 800;
+            Helper.ScreenHeight = 900;
+            Helper.SreenWidth = 1200;
 
             base.Initialize();
         }
@@ -129,7 +129,7 @@ namespace Raid_on_Bungleing_Bay
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.Blue);
 
             if (NotFirstFrame)
             {

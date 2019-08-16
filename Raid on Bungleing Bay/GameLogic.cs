@@ -25,6 +25,7 @@ namespace Raid_on_Bungleing_Bay
         KeyboardState OldKeyState;
 
         Player ThePlayer;
+        Land TheLand;
 
         public GameState CurrentMode { get => GameMode; }
 
@@ -38,14 +39,14 @@ namespace Raid_on_Bungleing_Bay
             // Z positive is towards the camera when at rotation zero.
             // Positive rotation rotates CCW. Zero has front facing X positive. Pi/2 on Y faces Z negative.
 
-            ThePlayer = new Player(game,  CameraRef, this);
+            ThePlayer = new Player(game, camera, this);
+            TheLand = new Land(game, camera, this);
 
             game.Components.Add(this);
         }
 
         public override void Initialize()
         {
-            // All our music files reside in Content directory.
 
             base.Initialize();
         }
@@ -57,7 +58,7 @@ namespace Raid_on_Bungleing_Bay
 
         public void BeginRun()
         {
-
+            TheLand.Rotation.X = MathHelper.Pi;
         }
 
         public override void Update(GameTime gameTime)
