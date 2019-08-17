@@ -60,6 +60,10 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Update
         public override void Update(GameTime gameTime)
         {
+            if (Helper.KeyDown(Keys.Up))
+            {
+                //PO.Velocity = Helper.VelocityFromAngleZ()
+            }
 
             base.Update(gameTime);
         }
