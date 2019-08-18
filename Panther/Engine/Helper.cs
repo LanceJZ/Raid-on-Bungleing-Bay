@@ -168,6 +168,7 @@ namespace Panther
         }
         /// <summary>
         /// Returns a Vector3 direction of travel from angle and magnitude.
+        /// Angle 0 is X positive.
         /// Only X and Y are calculated, Z = 0.
         /// </summary>
         /// <param name="rotation"></param>
@@ -398,8 +399,7 @@ namespace Panther
             return position;
         }
         #endregion
-
-            /// <summary>
+        /// <summary>
         /// Circle collusion detection. Target circle will be compared to this class's.
         /// Will return true of they intersect. Only for use with 2D Z plane.
         /// </summary>

@@ -43,6 +43,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entities\Factory.cs" />
     <Compile Include="Entities\Land.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="GameLogic.cs" />

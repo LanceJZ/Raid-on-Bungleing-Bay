@@ -54,7 +54,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             bottomLeft.PO.AddAsChildOf(this);
             topMid.PO.AddAsChildOf(this);
             topLeft.PO.AddAsChildOf(this);
-
+            Rotation.X = -MathHelper.Pi / 2;
         }
 
         public override void BeginRun()
@@ -69,8 +69,6 @@ namespace Raid_on_Bungleing_Bay.Entities
             bottomLeft.LoadModel("Land-5-Bottom left");
             topMid.LoadModel("Land-6-Top mid");
             topLeft.LoadModel("Land-7-Top left");
-            Rotation.X = MathHelper.Pi / 2;
-
         }
         #endregion
         #region Update

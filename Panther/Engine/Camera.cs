@@ -88,6 +88,12 @@ namespace Panther
             UpdateLookAt();
         }
 
+        public void MoveTo(Vector3 position)
+        {
+            Position = position;
+            UpdateLookAt();
+        }
+
         public Matrix RotateMatrix(Vector3 rotation)
         {
             NeedViewResync = true;

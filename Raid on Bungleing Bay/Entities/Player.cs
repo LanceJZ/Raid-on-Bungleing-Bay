@@ -1,11 +1,11 @@
 ﻿#region Using
+using System.Collections.Generic;
+using System.Linq;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 using Panther;
 #endregion
 namespace Raid_on_Bungleing_Bay.Entities
@@ -35,6 +35,17 @@ namespace Raid_on_Bungleing_Bay.Entities
             blade.AddAsChildOf(this);
             rotor.AddAsChildOf(this);
             PO.Position.Z = 10;
+            PO.Rotation.Z = MathHelper.Pi / 2;
+            //PO.Rotation.Y = MathHelper.Pi / 2;
+            blade.PO.RotationVelocity.Z = 13;
+            blade.PO.Position.Z = 0.65f;
+            rotor.PO.RotationVelocity.Y = 16;
+            rotor.PO.Position.Y = -0.1f;
+            rotor.PO.Position.X = -2.1f;
+
+            PO.Position.Y = -30f;
+            PO.Position.X = 14.5f;
+
             base.Initialize();
         }
 
@@ -43,8 +54,6 @@ namespace Raid_on_Bungleing_Bay.Entities
             LoadModel("Player-Body");
             blade.LoadModel("Player-Blade");
             rotor.LoadModel("Player-Rotor");
-            blade.PO.RotationVelocity.Z = 12;
-            rotor.PO.RotationVelocity.X = 16;
 
             base.LoadContent();
         }
@@ -52,20 +61,54 @@ namespace Raid_on_Bungleing_Bay.Entities
         public override void BeginRun()
         {
             base.BeginRun();
-            blade.PO.Position.Z = 6.5f;
-            rotor.PO.Position.Z = 1;
-            rotor.PO.Position.Y = -2;
         }
         #endregion
         #region Update
         public override void Update(GameTime gameTime)
         {
-            if (Helper.KeyDown(Keys.Up))
-            {
-                //PO.Velocity = Helper.VelocityFromAngleZ()
-            }
+            GetInput();
+            CameraRef.MoveTo(new Vector3(PO.Position.X, PO.Position.Y, CameraRef.Position.Z));
 
             base.Update(gameTime);
+        }
+
+        void GetInput()
+        {
+            if (Helper.KeyDown(Keys.Up))
+            {
+                if (MaxVelocity())
+                    PO.Acceleration = Helper.VelocityFromAngleZ(PO.Rotation.Z, 10);
+            }
+            else if (Helper.KeyDown(Keys.Down))
+            {
+                if (MaxVelocity())
+                    PO.Acceleration = Helper.VelocityFromAngleZ(PO.Rotation.Z, -10);
+            }
+            else
+            {
+                PO.Acceleration = Vector3.Zero;
+                PO.Acceleration = -PO.Velocity * 0.75f;
+            }
+
+            if (Helper.KeyDown(Keys.Left))
+            {
+                PO.RotationVelocity.Z = MathHelper.Pi;
+            }
+            else if (Helper.KeyDown(Keys.Right))
+            {
+                PO.RotationVelocity.Z = -MathHelper.Pi;
+            }
+            else
+            {
+                PO.RotationVelocity.Z = 0;
+            }
+        }
+
+        bool MaxVelocity()
+        {
+            if (Math.Abs(Velocity.X) + Math.Abs(Velocity.Y) < 500)
+                return true;
+            else return false;
         }
         #endregion
     }

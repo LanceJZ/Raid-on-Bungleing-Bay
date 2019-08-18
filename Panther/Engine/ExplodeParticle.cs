@@ -32,7 +32,7 @@ namespace Panther
         {
             base.Spawn(position);
 
-            Velocity = ThePO.RandomVelocity(velocity);
+            Velocity = Helper.RandomVelocity(velocity);
             Scale = Helper.RandomMinMax(scaleRange, 1.5f * scaleRange);
             LifeTimer.Reset(Helper.RandomMinMax(0.1f, maxLife));
         }
