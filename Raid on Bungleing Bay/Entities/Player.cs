@@ -13,9 +13,9 @@ namespace Raid_on_Bungleing_Bay.Entities
     class Player : ModelEntity
     {
         #region Fields
-        ModelEntity blade;
-        ModelEntity rotor;
-        GameLogic LogicRef;
+        ModelEntity _blade;
+        ModelEntity _rotor;
+        GameLogic _logicRef;
         #endregion
         #region Properties
 
@@ -23,25 +23,25 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Constructor
         public Player(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
         {
-            LogicRef = gameLogic;
             Enabled = true;
-            blade = new ModelEntity(game, camera);
-            rotor = new ModelEntity(game, camera);
+            _logicRef = gameLogic;
+            _blade = new ModelEntity(game, camera);
+            _rotor = new ModelEntity(game, camera);
         }
         #endregion
         #region Initialize-Load-BeginRun
         public override void Initialize()
         {
-            blade.AddAsChildOf(this);
-            rotor.AddAsChildOf(this);
+            _blade.AddAsChildOf(this);
+            _rotor.AddAsChildOf(this);
             PO.Position.Z = 10;
             PO.Rotation.Z = MathHelper.Pi / 2;
             //PO.Rotation.Y = MathHelper.Pi / 2;
-            blade.PO.RotationVelocity.Z = 13;
-            blade.PO.Position.Z = 0.65f;
-            rotor.PO.RotationVelocity.Y = 16;
-            rotor.PO.Position.Y = -0.1f;
-            rotor.PO.Position.X = -2.1f;
+            _blade.PO.RotationVelocity.Z = 13;
+            _blade.PO.Position.Z = 0.65f;
+            _rotor.PO.RotationVelocity.Y = 16;
+            _rotor.PO.Position.Y = -0.1f;
+            _rotor.PO.Position.X = -2.1f;
 
             PO.Position.Y = -30f;
             PO.Position.X = 14.5f;
@@ -52,8 +52,8 @@ namespace Raid_on_Bungleing_Bay.Entities
         protected override void LoadContent()
         {
             LoadModel("Player-Body");
-            blade.LoadModel("Player-Blade");
-            rotor.LoadModel("Player-Rotor");
+            _blade.LoadModel("Player-Blade");
+            _rotor.LoadModel("Player-Rotor");
 
             base.LoadContent();
         }
@@ -76,12 +76,12 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             if (Helper.KeyDown(Keys.Up))
             {
-                if (MaxVelocity())
+                if (MaxVelocity(500, PO.Velocity))
                     PO.Acceleration = Helper.VelocityFromAngleZ(PO.Rotation.Z, 10);
             }
             else if (Helper.KeyDown(Keys.Down))
             {
-                if (MaxVelocity())
+                if (MaxVelocity(500, PO.Velocity))
                     PO.Acceleration = Helper.VelocityFromAngleZ(PO.Rotation.Z, -10);
             }
             else
@@ -92,21 +92,24 @@ namespace Raid_on_Bungleing_Bay.Entities
 
             if (Helper.KeyDown(Keys.Left))
             {
-                PO.RotationVelocity.Z = MathHelper.Pi;
+                if (MaxVelocity(MathHelper.Pi, PO.RotationVelocity))
+                    PO.RotationAcceleration.Z = 2.5f;
             }
             else if (Helper.KeyDown(Keys.Right))
             {
-                PO.RotationVelocity.Z = -MathHelper.Pi;
+                if (MaxVelocity(MathHelper.Pi, PO.RotationVelocity))
+                    PO.RotationAcceleration.Z = -2.5f;
             }
             else
             {
-                PO.RotationVelocity.Z = 0;
+                PO.RotationAcceleration.Z = 0;
+                PO.RotationAcceleration = -PO.RotationVelocity * 1.75f;
             }
         }
 
-        bool MaxVelocity()
+        bool MaxVelocity(float max, Vector3 velocity)
         {
-            if (Math.Abs(Velocity.X) + Math.Abs(Velocity.Y) < 500)
+            if (Math.Abs(velocity.X) + Math.Abs(velocity.Y) < max)
                 return true;
             else return false;
         }

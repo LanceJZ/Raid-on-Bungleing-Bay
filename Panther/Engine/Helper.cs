@@ -497,5 +497,6 @@ namespace Panther
             float amt = Helper.RandomMinMax(speed * 0.15f, speed);
             return VelocityFromAngleZ(ang, amt);
         }
-}
+
+    }
 }

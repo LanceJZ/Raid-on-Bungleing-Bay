@@ -26,7 +26,8 @@ namespace Raid_on_Bungleing_Bay
 
         Land TheLand;
         Factory TheFactory;
-        Player ThePlayer;
+        Tank TheTank;
+        public Player ThePlayer;
 
         public GameState CurrentMode { get => GameMode; }
 
@@ -43,6 +44,7 @@ namespace Raid_on_Bungleing_Bay
             TheLand = new Land(game, camera, this);
             ThePlayer = new Player(game, camera, this);
             TheFactory = new Factory(game, camera, this);
+            TheTank = new Tank(game, camera, this);
 
             game.Components.Add(this);
         }

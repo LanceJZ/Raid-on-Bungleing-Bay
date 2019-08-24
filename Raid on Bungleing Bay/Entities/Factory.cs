@@ -20,8 +20,8 @@ namespace Raid_on_Bungleing_Bay.Entities
         public override void Initialize()
         {
             Enabled = true;
-            PO.Position.Y = -42f;
             PO.Position.X = 14.5f;
+            PO.Position.Y = -42f;
 
             base.Initialize();
         }
