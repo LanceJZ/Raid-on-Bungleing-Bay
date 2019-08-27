@@ -35,6 +35,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         Heading _currentHeading = Heading.toEnd;
         Timer _searchForPlayerTimer;
         Vector3 _targetPos;
+        Vector3 _targetOldPos;
         Vector3 _patrolStart;
         Vector3 _patrolEnd;
         #endregion
@@ -108,11 +109,19 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             if (PO.Rotation.Z != 0)
             {
-
+                PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
             }
             else
             {
-
+                if (Vector3.Distance(Position, _patrolStart) < 0.01)
+                {
+                    PO.Velocity.Y = 0;
+                    _currentHeading = Heading.toEnd;
+                }
+                else
+                {
+                    PO.Velocity.Y = 5;
+                }
             }
         }
 
@@ -120,11 +129,19 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             if (PO.Rotation.Z != MathHelper.Pi)
             {
-
+                PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
             }
             else
             {
-
+                if (Vector3.Distance(Position, _patrolEnd) < 0.01)
+                {
+                    PO.Velocity.Y = 0;
+                    _currentHeading = Heading.toStart;
+                }
+                else
+                {
+                    PO.Velocity.Y = -5;
+                }
             }
         }
 
@@ -139,6 +156,10 @@ namespace Raid_on_Bungleing_Bay.Entities
                     MoveTankToStart();
                     break;
             }
+
+            if (_searchForPlayerTimer.Elapsed)
+                _currentMode = Mode.search;
+
         }
 
         void Idle()
@@ -151,8 +172,9 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             if (Helper.RandomMinMax(0, 10) > 5)
             {
-                if (Vector3.Distance(PO.Position, _playerRef.PO.Position) < 75)
+                if (Vector3.Distance(PO.Position, _playerRef.PO.Position) < 25)
                 {
+                    _targetOldPos = _targetPos;
                     _targetPos = _playerRef.PO.Position;
                     _currentMode = Mode.turn;
                 }
@@ -160,7 +182,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             else
             {
                 _searchForPlayerTimer.Reset();
-                _currentMode = Mode.idle;
+                _currentMode = Mode.move;
             }
         }
 
@@ -169,7 +191,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             PO.RotationVelocity.Z = Helper.AimAtTargetZ(PO.Position, _targetPos,
                 PO.Rotation.Z, 0.25f);
 
-            if (PO.RotationVelocity.Z < 0.25f)
+            if (PO.RotationVelocity.Z < 0.05f)
             {
                 PO.RotationVelocity.Z = 0;
                 _currentMode = Mode.fire;
