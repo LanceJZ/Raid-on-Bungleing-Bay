@@ -46,8 +46,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         public Tank(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
         {
             Enabled = true;
-            _patrolStart = PO.Position;
-            _patrolEnd = PO.Position + new Vector3(0, -10, 0);
             _logicRef = gameLogic;
             _playerRef = gameLogic.ThePlayer;
             _shot = new Shot(game, camera, gameLogic);
@@ -57,9 +55,11 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Initialize-Load-BeginRun
         public override void Initialize()
         {
-            PO.Position.X = 27;
-            PO.Position.Y = -22;
+            PO.Position.X = 28;
+            PO.Position.Y = -38;
             PO.Rotation.Z = MathHelper.Pi / 2;
+            _patrolStart = PO.Position;
+            _patrolEnd = PO.Position + new Vector3(0, 12, 0);
 
             base.Initialize();
         }
@@ -107,40 +107,44 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void MoveTankToStart()
         {
-            if (PO.Rotation.Z != 0)
+            if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.05f || PO.Rotation.Z < (MathHelper.Pi + MathHelper.Pi / 2) - 0.05f)
             {
-                PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
+                PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolStart, Rotation.Z, 0.25f);
             }
             else
             {
-                if (Vector3.Distance(Position, _patrolStart) < 0.01)
+                PO.RotationVelocity.Z = 0;
+
+                if (Vector3.Distance(Position, _patrolStart) < 0.5)
                 {
                     PO.Velocity.Y = 0;
                     _currentHeading = Heading.toEnd;
                 }
                 else
                 {
-                    PO.Velocity.Y = 5;
+                    PO.Velocity.Y = -1;
                 }
             }
         }
 
         void MoveTankToEnd()
         {
-            if (PO.Rotation.Z != MathHelper.Pi)
+            if (PO.Rotation.Z > (MathHelper.Pi / 2) + 0.05f || PO.Rotation.Z < (MathHelper.Pi / 2) - 0.05f)
             {
                 PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
             }
             else
             {
-                if (Vector3.Distance(Position, _patrolEnd) < 0.01)
+                PO.RotationVelocity.Z = 0;
+
+                if (Vector3.Distance(Position, _patrolEnd) < 0.5)
                 {
                     PO.Velocity.Y = 0;
                     _currentHeading = Heading.toStart;
                 }
                 else
                 {
-                    PO.Velocity.Y = -5;
+                    PO.Velocity.Y = 1;
                 }
             }
         }
@@ -170,9 +174,12 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void SearchForPlayer() //Do this on move too.
         {
-            if (Helper.RandomMinMax(0, 10) > 5)
+            _searchForPlayerTimer.Reset();
+            _currentMode = Mode.move;
+
+            if (Helper.RandomMinMax(0, 10) > 3)
             {
-                if (Vector3.Distance(PO.Position, _playerRef.PO.Position) < 25)
+                if (Vector3.Distance(PO.Position, _playerRef.PO.Position) < 5) //25 works for game.
                 {
                     _targetOldPos = _targetPos;
                     _targetPos = _playerRef.PO.Position;
@@ -181,8 +188,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
             else
             {
-                _searchForPlayerTimer.Reset();
-                _currentMode = Mode.move;
+                _currentMode = Mode.idle;
             }
         }
 
