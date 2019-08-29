@@ -58,8 +58,9 @@ namespace Raid_on_Bungleing_Bay.Entities
             PO.Position.X = 28;
             PO.Position.Y = -38;
             PO.Rotation.Z = MathHelper.Pi / 2;
-            _patrolStart = PO.Position;
-            _patrolEnd = PO.Position + new Vector3(0, 12, 0);
+            _patrolStart = Position;
+            _patrolEnd = Position;
+            _patrolEnd.Y = PO.Position.Y + 22;
 
             base.Initialize();
         }
@@ -107,7 +108,7 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void MoveTankToStart()
         {
-            if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.05f || PO.Rotation.Z < (MathHelper.Pi + MathHelper.Pi / 2) - 0.05f)
+            if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.025f || PO.Rotation.Z < (MathHelper.Pi + MathHelper.Pi / 2) - 0.025f)
             {
                 PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolStart, Rotation.Z, 0.25f);
             }
@@ -115,21 +116,23 @@ namespace Raid_on_Bungleing_Bay.Entities
             {
                 PO.RotationVelocity.Z = 0;
 
-                if (Vector3.Distance(Position, _patrolStart) < 0.5)
+                float dis = Vector3.Distance(Position, _patrolStart);
+
+                if (dis < 0.1f)
                 {
                     PO.Velocity.Y = 0;
                     _currentHeading = Heading.toEnd;
                 }
                 else
                 {
-                    PO.Velocity.Y = -1;
+                    PO.Velocity.Y = -dis * 0.1f;
                 }
             }
         }
 
         void MoveTankToEnd()
         {
-            if (PO.Rotation.Z > (MathHelper.Pi / 2) + 0.05f || PO.Rotation.Z < (MathHelper.Pi / 2) - 0.05f)
+            if (PO.Rotation.Z > (MathHelper.Pi / 2) + 0.025f || PO.Rotation.Z < (MathHelper.Pi / 2) - 0.025f)
             {
                 PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
             }
@@ -137,14 +140,16 @@ namespace Raid_on_Bungleing_Bay.Entities
             {
                 PO.RotationVelocity.Z = 0;
 
-                if (Vector3.Distance(Position, _patrolEnd) < 0.5)
+                float dis = Vector3.Distance(Position, _patrolEnd);
+
+                if (dis < 0.1f)
                 {
                     PO.Velocity.Y = 0;
                     _currentHeading = Heading.toStart;
                 }
                 else
                 {
-                    PO.Velocity.Y = 1;
+                    PO.Velocity.Y = dis * 0.1f;
                 }
             }
         }
@@ -162,8 +167,9 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
 
             if (_searchForPlayerTimer.Elapsed)
-                _currentMode = Mode.search;
-
+            {
+                SearchForPlayer();
+            }
         }
 
         void Idle()
@@ -179,10 +185,10 @@ namespace Raid_on_Bungleing_Bay.Entities
 
             if (Helper.RandomMinMax(0, 10) > 3)
             {
-                if (Vector3.Distance(PO.Position, _playerRef.PO.Position) < 5) //25 works for game.
+                if (Vector3.Distance(Position, _playerRef.Position) < 8) //25 works for game.
                 {
                     _targetOldPos = _targetPos;
-                    _targetPos = _playerRef.PO.Position;
+                    _targetPos = _playerRef.Position;
                     _currentMode = Mode.turn;
                 }
             }
@@ -194,7 +200,7 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void TurnTowardsPlayer()
         {
-            PO.RotationVelocity.Z = Helper.AimAtTargetZ(PO.Position, _targetPos,
+            PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _targetPos,
                 PO.Rotation.Z, 0.25f);
 
             if (PO.RotationVelocity.Z < 0.05f)
@@ -206,7 +212,7 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void FireShot()
         {
-            _shot.Fire(PO.Position, Helper.VelocityFromAngleZ(PO.Rotation.Z, 10));
+            _shot.Fire(Position, Helper.VelocityFromAngleZ(PO.Rotation.Z, 10));
             _searchForPlayerTimer.Reset();
             _currentMode = Mode.idle;
         }
