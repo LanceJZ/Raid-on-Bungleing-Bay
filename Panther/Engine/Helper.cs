@@ -463,7 +463,7 @@ namespace Panther
         public static Vector3 VelocityFromVectorsZ(Vector3 origin, Vector3 target, float magnitude)
         {
             return VelocityFromAngleZ(AngleFromVectorsZ(origin, target), magnitude);
-        }
+        }//TODO: Fix, allows negative angles. Not allowed. Invalid angle.
         /// <summary>
         /// Returns a float of the angle in radians derived from two Vector3 passed into it,
         /// using only the X and Z.

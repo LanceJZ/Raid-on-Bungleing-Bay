@@ -108,48 +108,47 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void MoveTankToStart()
         {
-            if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.025f || PO.Rotation.Z < (MathHelper.Pi + MathHelper.Pi / 2) - 0.025f)
+            if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.25f || PO.Rotation.Z < (MathHelper.Pi + MathHelper.Pi / 2) - 0.25f)
             {
                 PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolStart, Rotation.Z, 0.25f);
             }
             else
             {
                 PO.RotationVelocity.Z = 0;
+                PO.Rotation.Z = MathHelper.Pi + MathHelper.Pi / 2;
 
-                float dis = Vector3.Distance(Position, _patrolStart);
 
-                if (dis < 0.1f)
+                if (Position.Y < _patrolStart.Y)
                 {
                     PO.Velocity.Y = 0;
                     _currentHeading = Heading.toEnd;
                 }
                 else
                 {
-                    PO.Velocity.Y = -dis * 0.1f;
+                    PO.Velocity.Y = -2.5f;
                 }
             }
         }
 
         void MoveTankToEnd()
         {
-            if (PO.Rotation.Z > (MathHelper.Pi / 2) + 0.025f || PO.Rotation.Z < (MathHelper.Pi / 2) - 0.025f)
+            if (PO.Rotation.Z > (MathHelper.Pi / 2) + 0.25f || PO.Rotation.Z < (MathHelper.Pi / 2) - 0.25f)
             {
                 PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
             }
             else
             {
                 PO.RotationVelocity.Z = 0;
+                PO.Rotation.Z = MathHelper.Pi / 2;
 
-                float dis = Vector3.Distance(Position, _patrolEnd);
-
-                if (dis < 0.1f)
+                if (Position.Y > _patrolEnd.Y)
                 {
                     PO.Velocity.Y = 0;
                     _currentHeading = Heading.toStart;
                 }
                 else
                 {
-                    PO.Velocity.Y = dis * 0.1f;
+                    PO.Velocity.Y = 2.5f;
                 }
             }
         }
@@ -174,6 +173,8 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void Idle()
         {
+            Velocity = Vector3.Zero;
+
             if (_searchForPlayerTimer.Elapsed)
                 _currentMode = Mode.search;
         }
@@ -181,15 +182,20 @@ namespace Raid_on_Bungleing_Bay.Entities
         void SearchForPlayer() //Do this on move too.
         {
             _searchForPlayerTimer.Reset();
-            _currentMode = Mode.move;
 
-            if (Helper.RandomMinMax(0, 10) > 3)
+            if (Helper.RandomMinMax(0, 10) > 1)
             {
-                if (Vector3.Distance(Position, _playerRef.Position) < 8) //25 works for game.
+                if (Vector3.Distance(Position, _playerRef.Position) < 15) //25 works for game.
                 {
                     _targetOldPos = _targetPos;
                     _targetPos = _playerRef.Position;
                     _currentMode = Mode.turn;
+                    Velocity = Vector3.Zero;
+                    RotationVelocity = Vector3.Zero;
+                }
+                else
+                {
+                    _currentMode = Mode.move;
                 }
             }
             else
@@ -200,12 +206,37 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void TurnTowardsPlayer()
         {
-            PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _targetPos,
-                PO.Rotation.Z, 0.25f);
+            PO.RotationAcceleration.Z = Helper.AimAtTargetZ(Position, _targetPos, Rotation.Z, 0.15f);
 
-            if (PO.RotationVelocity.Z < 0.05f)
+            if (PO.RotationVelocity.Z > 0.25f)
+            {
+                PO.RotationVelocity.Z = 0.25f;
+                PO.RotationAcceleration.Z = 0;
+            }
+
+            if (PO.RotationVelocity.Z < -0.25f)
+            {
+                PO.RotationVelocity.Z = -0.25f;
+                PO.RotationAcceleration.Z = 0;
+            }
+
+            float tAngle = Rotation.Z;
+            float pAngle = Helper.AngleFromVectorsZ(Position, _targetPos);
+            float aDiffernce = 0;
+
+            if (tAngle < pAngle)
+            {
+                aDiffernce = pAngle - tAngle;
+            }
+            else
+            {
+                aDiffernce = tAngle - pAngle;
+            }
+
+            if (aDiffernce < 0.25f)
             {
                 PO.RotationVelocity.Z = 0;
+                PO.RotationAcceleration.Z = 0;
                 _currentMode = Mode.fire;
             }
         }

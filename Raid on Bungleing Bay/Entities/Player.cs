@@ -81,8 +81,8 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
             else if (Helper.KeyDown(Keys.Down))
             {
-                if (MaxVelocity(500, PO.Velocity))
-                    PO.Acceleration = Helper.VelocityFromAngleZ(PO.Rotation.Z, -10);
+                if (MaxVelocity(200, PO.Velocity))
+                    PO.Acceleration = Helper.VelocityFromAngleZ(PO.Rotation.Z, -6);
             }
             else
             {
