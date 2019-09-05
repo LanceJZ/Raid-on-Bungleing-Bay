@@ -43,6 +43,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entities\Machinegun.cs" />
     <Compile Include="Entities\Shot.cs" />
     <Compile Include="Entities\Tank.cs" />
     <Compile Include="Entities\Factory.cs" />

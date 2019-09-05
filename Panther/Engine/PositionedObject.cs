@@ -242,7 +242,7 @@ namespace Panther
                 RotationVelocity += RotationAcceleration * TheElapsedGameTime;
                 Rotation += RotationVelocity * TheElapsedGameTime;
 
-                Rotation = WrapAngle(Rotation);
+                Rotation = Helper.WrapAngle(Rotation);
             }
 
             if (IsChild)
@@ -255,29 +255,6 @@ namespace Panther
             }
 
             base.Update(gameTime);
-        }
-
-        Vector3 WrapAngle(Vector3 angle)
-        {
-            if (angle.X < 0)
-                angle.X += MathHelper.TwoPi;
-
-            if (angle.Y < 0)
-                angle.Y += MathHelper.TwoPi;
-
-            if (angle.Z < 0)
-                angle.Z += MathHelper.TwoPi;
-
-            if (angle.X > MathHelper.TwoPi)
-                angle.X -= MathHelper.TwoPi;
-
-            if (angle.Y > MathHelper.TwoPi)
-                angle.Y -= MathHelper.TwoPi;
-
-            if (angle.Z > MathHelper.TwoPi)
-                angle.Z -= MathHelper.TwoPi;
-
-            return angle;
         }
         /// <summary>
         /// Adds child that is not directly connect.

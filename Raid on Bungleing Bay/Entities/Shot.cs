@@ -28,7 +28,7 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         }
         #endregion
-        #region Initialize-Load-BeginRun
+        #region Initialize-Load
         public override void Initialize()
         {
             Scale = 0.5f;
@@ -39,12 +39,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
 
             base.LoadContent();
-        }
-
-        public override void BeginRun()
-        {
-            base.BeginRun();
-
         }
         #endregion
         #region Update

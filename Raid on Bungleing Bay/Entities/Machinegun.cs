@@ -10,64 +10,45 @@ using Panther;
 #endregion
 namespace Raid_on_Bungleing_Bay.Entities
 {
-    enum Mode
-    {
-        idle,
-        search,
-        move,
-        turn,
-        fire
-    }
-
-    enum Heading
-    {
-        toStart,
-        toEnd
-    }
-
-    class Tank : ModelEntity
+    class Machinegun : ModelEntity
     {
         #region Fields
+        GameLogic LogicRef;
         Shot _shot;
-        GameLogic _logicRef;
         Player _playerRef;
         Mode _currentMode = Mode.idle;
-        Heading _currentHeading = Heading.toEnd;
         Timer _searchForPlayerTimer;
         Vector3 _targetPos;
         Vector3 _targetOldPos;
-        Vector3 _patrolStart;
-        Vector3 _patrolEnd;
+
         #endregion
         #region Properties
 
         #endregion
         #region Constructor
-        public Tank(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
+        public Machinegun(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
         {
-            Enabled = true;
-            _logicRef = gameLogic;
+            LogicRef = gameLogic;
+            //Enabled = false;
+
+            _searchForPlayerTimer = new Timer(game, 0.25f);
             _playerRef = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
-            _searchForPlayerTimer = new Timer(game, 1);
+
         }
         #endregion
         #region Initialize-Load
         public override void Initialize()
         {
-            PO.Position.X = 28;
-            PO.Position.Y = -38;
-            PO.Rotation.Z = MathHelper.Pi / 2;
-            _patrolStart = Position;
-            _patrolEnd = Position;
-            _patrolEnd.Y = PO.Position.Y + 22;
+            PO.Position.X = -8.25f;
+            PO.Position.Y = -12.0f;
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            LoadModel("Tank");
+            LoadModel("MachineGun");
 
             base.LoadContent();
         }
@@ -75,7 +56,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Update
         public override void Update(GameTime gameTime)
         {
-
             switch (_currentMode)
             {
                 case Mode.idle:
@@ -83,9 +63,6 @@ namespace Raid_on_Bungleing_Bay.Entities
                     break;
                 case Mode.search:
                     SearchForPlayer();
-                    break;
-                case Mode.move:
-                    MoveTank();
                     break;
                 case Mode.fire:
                     FireShot();
@@ -95,80 +72,11 @@ namespace Raid_on_Bungleing_Bay.Entities
                     break;
             }
 
-
             base.Update(gameTime);
         }
         #endregion
-
-        void MoveTankToStart()
-        {
-            if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.25f || PO.Rotation.Z < (MathHelper.Pi + MathHelper.Pi / 2) - 0.25f)
-            {
-                PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolStart, Rotation.Z, 0.25f);
-            }
-            else
-            {
-                PO.RotationVelocity.Z = 0;
-                PO.Rotation.Z = MathHelper.Pi + MathHelper.Pi / 2;
-
-
-                if (Position.Y < _patrolStart.Y)
-                {
-                    PO.Velocity.Y = 0;
-                    _currentHeading = Heading.toEnd;
-                }
-                else
-                {
-                    PO.Velocity.Y = -2.5f;
-                }
-            }
-        }
-
-        void MoveTankToEnd()
-        {
-            if (PO.Rotation.Z > (MathHelper.Pi / 2) + 0.25f || PO.Rotation.Z < (MathHelper.Pi / 2) - 0.25f)
-            {
-                PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
-            }
-            else
-            {
-                PO.RotationVelocity.Z = 0;
-                PO.Rotation.Z = MathHelper.Pi / 2;
-
-                if (Position.Y > _patrolEnd.Y)
-                {
-                    PO.Velocity.Y = 0;
-                    _currentHeading = Heading.toStart;
-                }
-                else
-                {
-                    PO.Velocity.Y = 2.5f;
-                }
-            }
-        }
-
-        void MoveTank()
-        {
-            switch (_currentHeading)
-            {
-                case Heading.toEnd:
-                    MoveTankToEnd();
-                    break;
-                case Heading.toStart:
-                    MoveTankToStart();
-                    break;
-            }
-
-            if (_searchForPlayerTimer.Elapsed)
-            {
-                SearchForPlayer();
-            }
-        }
-
         void Idle()
         {
-            Velocity = Vector3.Zero;
-
             if (_searchForPlayerTimer.Elapsed)
                 _currentMode = Mode.search;
         }
@@ -189,7 +97,7 @@ namespace Raid_on_Bungleing_Bay.Entities
                 }
                 else
                 {
-                    _currentMode = Mode.move;
+                    _currentMode = Mode.idle;
                 }
             }
             else
@@ -202,15 +110,15 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             PO.RotationAcceleration.Z = Helper.AimAtTargetZ(Position, _targetPos, Rotation.Z, 0.15f);
 
-            if (PO.RotationVelocity.Z > 0.25f)
+            if (PO.RotationVelocity.Z > 0.5f)
             {
-                PO.RotationVelocity.Z = 0.25f;
+                PO.RotationVelocity.Z = 0.5f;
                 PO.RotationAcceleration.Z = 0;
             }
 
-            if (PO.RotationVelocity.Z < -0.25f)
+            if (PO.RotationVelocity.Z < -0.5f)
             {
-                PO.RotationVelocity.Z = -0.25f;
+                PO.RotationVelocity.Z = -0.5f;
                 PO.RotationAcceleration.Z = 0;
             }
 

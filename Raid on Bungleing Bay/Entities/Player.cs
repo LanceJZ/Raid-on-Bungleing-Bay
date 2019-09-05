@@ -29,7 +29,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             _rotor = new ModelEntity(game, camera);
         }
         #endregion
-        #region Initialize-Load-BeginRun
+        #region Initialize-Load
         public override void Initialize()
         {
             _blade.AddAsChildOf(this);
@@ -57,11 +57,6 @@ namespace Raid_on_Bungleing_Bay.Entities
 
             base.LoadContent();
         }
-
-        public override void BeginRun()
-        {
-            base.BeginRun();
-        }
         #endregion
         #region Update
         public override void Update(GameTime gameTime)
@@ -74,6 +69,11 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void GetInput()
         {
+            if (Helper.KeyPressed(Keys.P))
+            {
+                System.Diagnostics.Debug.WriteLine("Location is " + Position.ToString());
+            }
+
             if (Helper.KeyDown(Keys.Up))
             {
                 if (MaxVelocity(500, PO.Velocity))
