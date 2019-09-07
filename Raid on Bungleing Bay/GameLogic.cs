@@ -28,6 +28,8 @@ namespace Raid_on_Bungleing_Bay
         Factory TheFactory;
         Tank TheTank;
         Machinegun TheMachinegun;
+        Radar TheRadar;
+        JetPlane TheJet;
         public Player _player;
 
         public GameState CurrentMode { get => _mode; }
@@ -48,6 +50,8 @@ namespace Raid_on_Bungleing_Bay
             TheFactory = new Factory(game, camera, this);
             TheTank = new Tank(game, camera, this);
             TheMachinegun = new Machinegun(game, camera, this);
+            TheRadar = new Radar(game, camera, this);
+            TheJet = new JetPlane(game, camera, this);
 
             game.Components.Add(this);
         }
@@ -74,9 +78,12 @@ namespace Raid_on_Bungleing_Bay
 
             if (KBS != _oldKeyState)
             {
+                if (Helper.KeyPressed(Keys.P))
+                {
+                    System.Diagnostics.Debug.WriteLine("Location is " + _player.Position.ToString());
+                }
 
             }
-
 
             _oldKeyState = Keyboard.GetState();
 

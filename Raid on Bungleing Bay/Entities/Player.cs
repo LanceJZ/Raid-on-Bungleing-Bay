@@ -69,11 +69,6 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void GetInput()
         {
-            if (Helper.KeyPressed(Keys.P))
-            {
-                System.Diagnostics.Debug.WriteLine("Location is " + Position.ToString());
-            }
-
             if (Helper.KeyDown(Keys.Up))
             {
                 if (MaxVelocity(500, PO.Velocity))
