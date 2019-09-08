@@ -10,33 +10,35 @@ using Panther;
 #endregion
 namespace Raid_on_Bungleing_Bay.Entities
 {
-    class Shot : Cube
+    class JetPlane : ModelEntity
     {
         #region Fields
-        GameLogic _logicRef;
-        Timer _lifeTimer;
+        GameLogic LogicRef;
+
         #endregion
         #region Properties
 
         #endregion
         #region Constructor
-        public Shot(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
+        public JetPlane(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
         {
-            Enabled = false;
-            _logicRef = gameLogic;
-            _lifeTimer = new Timer(game, 3);
+            LogicRef = gameLogic;
+            //Enabled = false;
 
         }
         #endregion
         #region Initialize-Load
         public override void Initialize()
         {
-            Scale = 0.5f;
+            Position = new Vector3(-25, 25, 0);
+
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
+            LoadModel("JetPlane");
 
             base.LoadContent();
         }
@@ -44,21 +46,13 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Update
         public override void Update(GameTime gameTime)
         {
-            if (_lifeTimer.Elapsed)
-            {
-                Enabled = false;
-            }
 
             base.Update(gameTime);
         }
-
-        public void Fire(Vector3 position, Vector3 velocity)
-        {
-            Enabled = true;
-            PO.Position = position;
-            PO.Velocity = velocity;
-            _lifeTimer.Reset();
-        }
+        #endregion
+        #region Public methods
+        #endregion
+        #region Private/Protected methods
         #endregion
     }
 }

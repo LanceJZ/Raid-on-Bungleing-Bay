@@ -19,32 +19,39 @@ namespace Raid_on_Bungleing_Bay
 {
     class GameLogic : GameComponent
     {
-        Camera CameraRef;
+        Camera _camera;
 
-        GameState GameMode = GameState.InPlay;
-        KeyboardState OldKeyState;
+        GameState _mode = GameState.InPlay;
+        KeyboardState _oldKeyState;
 
-        Land TheLand;
+        Land _land;
         Factory TheFactory;
         Tank TheTank;
-        public Player ThePlayer;
+        Machinegun TheMachinegun;
+        Radar TheRadar;
+        JetPlane TheJet;
+        public Player _player;
 
-        public GameState CurrentMode { get => GameMode; }
+        public GameState CurrentMode { get => _mode; }
 
         public GameLogic(Game game, Camera camera) : base(game)
         {
-            CameraRef = camera;
+            _camera = camera;
 
             // Screen resolution is 1200 X 900.
-            // Y positive is Up.
-            // X positive is right of window when camera is at rotation zero.
-            // Z positive is towards the camera when at rotation zero.
+            // [Y] positive is Up.
+            // [X] positive is right of window when camera is at rotation zero.
+            // [Z] positive is towards the camera when at rotation zero.
+            // [X] and [Y] zero is center of screen.
             // Positive rotation rotates CCW. Zero has front facing X positive. Pi/2 on Y faces Z negative.
 
-            TheLand = new Land(game, camera, this);
-            ThePlayer = new Player(game, camera, this);
+            _land = new Land(game, camera, this);
+            _player = new Player(game, camera, this);
             TheFactory = new Factory(game, camera, this);
             TheTank = new Tank(game, camera, this);
+            TheMachinegun = new Machinegun(game, camera, this);
+            TheRadar = new Radar(game, camera, this);
+            TheJet = new JetPlane(game, camera, this);
 
             game.Components.Add(this);
         }
@@ -69,13 +76,16 @@ namespace Raid_on_Bungleing_Bay
         {
             KeyboardState KBS = Keyboard.GetState();
 
-            if (KBS != OldKeyState)
+            if (KBS != _oldKeyState)
             {
+                if (Helper.KeyPressed(Keys.P))
+                {
+                    System.Diagnostics.Debug.WriteLine("Location is " + _player.Position.ToString());
+                }
 
             }
 
-
-            OldKeyState = Keyboard.GetState();
+            _oldKeyState = Keyboard.GetState();
 
             base.Update(gameTime);
         }

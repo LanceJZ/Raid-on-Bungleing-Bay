@@ -29,7 +29,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             _rotor = new ModelEntity(game, camera);
         }
         #endregion
-        #region Initialize
+        #region Initialize-Load
         public override void Initialize()
         {
             _blade.AddAsChildOf(this);
@@ -46,11 +46,16 @@ namespace Raid_on_Bungleing_Bay.Entities
             PO.Position.Y = -30f;
             PO.Position.X = 14.5f;
 
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
             LoadModel("Player-Body");
             _blade.LoadModel("Player-Blade");
             _rotor.LoadModel("Player-Rotor");
 
-            base.Initialize();
+            base.LoadContent();
         }
         #endregion
         #region Update
@@ -71,8 +76,8 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
             else if (Helper.KeyDown(Keys.Down))
             {
-                if (MaxVelocity(500, PO.Velocity))
-                    PO.Acceleration = Helper.VelocityFromAngleZ(PO.Rotation.Z, -10);
+                if (MaxVelocity(200, PO.Velocity))
+                    PO.Acceleration = Helper.VelocityFromAngleZ(PO.Rotation.Z, -6);
             }
             else
             {

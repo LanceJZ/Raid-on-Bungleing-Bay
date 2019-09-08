@@ -135,7 +135,25 @@ namespace Panther
             return false;
         }
 
+        public static Vector3 WrapAngle(Vector3 angle)
+        {
+            angle.X = WrapAngle(angle.X);
+            angle.Y = WrapAngle(angle.Y);
+            angle.Z = WrapAngle(angle.Z);
 
+            return angle;
+        }
+
+        public static float WrapAngle(float angle)
+        {
+            if (angle < 0)
+                angle += MathHelper.TwoPi;
+
+            if (angle > MathHelper.TwoPi)
+                angle -= MathHelper.TwoPi;
+
+            return angle;
+        }
         public static Vector3 RandomVelocity(float speed, float radianDirection)
         {
             float amt = Helper.RandomMinMax(speed * 0.15f, speed);
@@ -472,7 +490,7 @@ namespace Panther
         /// <returns>Float</returns>
         public static float AngleFromVectorsY(Vector3 origin, Vector3 target)
         {
-            return (float)(Math.Atan2(-target.Z - -origin.Z, target.X - origin.X));
+            return WrapAngle((float)(Math.Atan2(-target.Z - -origin.Z, target.X - origin.X)));
         }
         /// <summary>
         /// Returns a float of the angle in radians to target, using only the X and Y.
@@ -482,7 +500,7 @@ namespace Panther
         /// <returns></returns>
         public static float AngleFromVectorsZ(Vector3 origin, Vector3 target)
         {
-            return (float)(Math.Atan2(target.Y - origin.Y, target.X - origin.X));
+            return WrapAngle((float)(Math.Atan2(target.Y - origin.Y, target.X - origin.X)));
         }
 
         public static float RandomRadian()

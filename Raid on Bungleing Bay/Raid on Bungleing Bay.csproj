@@ -49,6 +49,9 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entities\JetPlane.cs" />
+    <Compile Include="Entities\Machinegun.cs" />
+    <Compile Include="Entities\Radar.cs" />
     <Compile Include="Entities\Shot.cs" />
     <Compile Include="Entities\Tank.cs" />
     <Compile Include="Entities\Factory.cs" />
