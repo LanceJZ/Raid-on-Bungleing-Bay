@@ -52,7 +52,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             _searchForPlayerTimer = new Timer(game, 1);
         }
         #endregion
-        #region Initialize-Load
+        #region Initialize
         public override void Initialize()
         {
             PO.Position.X = 28;
@@ -63,13 +63,8 @@ namespace Raid_on_Bungleing_Bay.Entities
             _patrolEnd.Y = PO.Position.Y + 22;
 
             base.Initialize();
-        }
 
-        protected override void LoadContent()
-        {
             LoadModel("Tank");
-
-            base.LoadContent();
         }
         #endregion
         #region Update

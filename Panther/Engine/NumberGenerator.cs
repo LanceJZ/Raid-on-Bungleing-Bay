@@ -8,7 +8,7 @@ using System;
 
 namespace Panther
 {
-    class NumberGenerator : PositionedObject
+    public class NumberGenerator : PositionedObject
     {
         #region Fields
         List<NumberGrid> _numberDisplay = new List<NumberGrid>();

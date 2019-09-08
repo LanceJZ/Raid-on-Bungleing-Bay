@@ -29,7 +29,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             _rotor = new ModelEntity(game, camera);
         }
         #endregion
-        #region Initialize-Load
+        #region Initialize
         public override void Initialize()
         {
             _blade.AddAsChildOf(this);
@@ -37,7 +37,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             PO.Position.Z = 10;
             PO.Rotation.Z = MathHelper.Pi / 2;
             //PO.Rotation.Y = MathHelper.Pi / 2;
-            _blade.PO.RotationVelocity.Z = 13;
+            _blade.PO.RotationVelocity.Z = 12;
             _blade.PO.Position.Z = 0.65f;
             _rotor.PO.RotationVelocity.Y = 16;
             _rotor.PO.Position.Y = -0.1f;
@@ -46,16 +46,11 @@ namespace Raid_on_Bungleing_Bay.Entities
             PO.Position.Y = -30f;
             PO.Position.X = 14.5f;
 
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
             LoadModel("Player-Body");
             _blade.LoadModel("Player-Blade");
             _rotor.LoadModel("Player-Rotor");
 
-            base.LoadContent();
+            base.Initialize();
         }
         #endregion
         #region Update
@@ -64,9 +59,17 @@ namespace Raid_on_Bungleing_Bay.Entities
             GetInput();
             CameraRef.MoveTo(new Vector3(PO.Position.X, PO.Position.Y, CameraRef.Position.Z));
 
+            //TODO:Fix this, keep blade at same rotation when body rotates.
+            float bladeCounterZ = _blade.RotationVelocity.Z - RotationVelocity.Z;
+            _blade.PO.RotationVelocity.Z = bladeCounterZ;
+
+
             base.Update(gameTime);
         }
-
+        #endregion
+        #region Public methods
+        #endregion
+        #region Private methods
         void GetInput()
         {
             if (Helper.KeyDown(Keys.Up))
@@ -89,6 +92,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             {
                 if (MaxVelocity(MathHelper.Pi, PO.RotationVelocity))
                     PO.RotationAcceleration.Z = 2.5f;
+
             }
             else if (Helper.KeyDown(Keys.Right))
             {

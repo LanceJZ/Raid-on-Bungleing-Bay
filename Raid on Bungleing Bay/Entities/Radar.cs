@@ -27,20 +27,15 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         }
         #endregion
-        #region Initialize-Load-BeginRun
+        #region Initialize
         public override void Initialize()
         {
+            base.Initialize();
+
             Position = new Vector3(13, -22f, 0);
             PO.RotationVelocity.Z = 1;
 
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
             LoadModel("Radar");
-
-            base.LoadContent();
         }
         #endregion
         #region Update

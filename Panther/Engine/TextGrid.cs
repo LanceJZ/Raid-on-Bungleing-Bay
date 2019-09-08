@@ -8,7 +8,7 @@ using System;
 
 namespace Panther
 {
-    class TextGrid : PositionedObject
+    public class TextGrid : PositionedObject
     {
         #region Fields
         ShapeGenerater _HTLine;

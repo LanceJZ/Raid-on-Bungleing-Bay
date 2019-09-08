@@ -23,6 +23,7 @@ namespace Raid_on_Bungleing_Bay
 
         GameState _mode = GameState.InPlay;
         KeyboardState _oldKeyState;
+        NumberGenerator _score;
 
         Land _land;
         Factory TheFactory;
@@ -45,6 +46,7 @@ namespace Raid_on_Bungleing_Bay
             // [X] and [Y] zero is center of screen.
             // Positive rotation rotates CCW. Zero has front facing X positive. Pi/2 on Y faces Z negative.
 
+            _score = new NumberGenerator(game);
             _land = new Land(game, camera, this);
             _player = new Player(game, camera, this);
             TheFactory = new Factory(game, camera, this);
@@ -58,6 +60,8 @@ namespace Raid_on_Bungleing_Bay
 
         public override void Initialize()
         {
+            _score.Position.Y = 300;
+            _score.Position.X = -125;
 
             base.Initialize();
         }
@@ -69,6 +73,7 @@ namespace Raid_on_Bungleing_Bay
 
         public void BeginRun()
         {
+            _score.Number = 666;
 
         }
 

@@ -139,44 +139,6 @@ namespace Panther
 
             if (_model == null)
                 LoadModel(_modelFileName);
-
-            if (_model != null)
-            {
-                _boneTransforms = new Matrix[_model.Bones.Count];
-
-                for (int i = 1; i < _model.Bones.Count; i++)
-                {
-                    _baseTransforms[_model.Bones[i].Name] = _model.Bones[i].Transform;
-                    _currentTransforms[_model.Bones[i].Name] = _model.Bones[i].Transform;
-                }
-
-                _minVector = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-                _maxVector = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-
-                foreach (ModelMesh mesh in _model.Meshes)
-                {
-                    foreach (ModelMeshPart part in mesh.MeshParts)
-                    {
-                        VertexPositionNormalTexture[] vertexData = new
-                        VertexPositionNormalTexture[part.VertexBuffer.VertexCount];
-                        part.VertexBuffer.GetData<VertexPositionNormalTexture>(vertexData);
-
-                        for (int i = 0; i < part.VertexBuffer.VertexCount; i++)
-                        {
-                            _minVector = Vector3.Min(_minVector, vertexData[i].Position);
-                            _maxVector = Vector3.Max(_maxVector, vertexData[i].Position);
-                        }
-                    }
-                }
-
-                Game.SuppressDraw();
-                //Enabled = true;
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("The Model was null for this Entity. " + this);
-            }
-
         }
 
         protected override void UnloadContent()
@@ -317,6 +279,43 @@ namespace Panther
         {
             _model = Helper.LoadModel(modelFileName);
             SetModel(_model);
+
+            if (_model != null)
+            {
+                _boneTransforms = new Matrix[_model.Bones.Count];
+
+                for (int i = 1; i < _model.Bones.Count; i++)
+                {
+                    _baseTransforms[_model.Bones[i].Name] = _model.Bones[i].Transform;
+                    _currentTransforms[_model.Bones[i].Name] = _model.Bones[i].Transform;
+                }
+
+                _minVector = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+                _maxVector = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+
+                foreach (ModelMesh mesh in _model.Meshes)
+                {
+                    foreach (ModelMeshPart part in mesh.MeshParts)
+                    {
+                        VertexPositionNormalTexture[] vertexData = new
+                        VertexPositionNormalTexture[part.VertexBuffer.VertexCount];
+                        part.VertexBuffer.GetData<VertexPositionNormalTexture>(vertexData);
+
+                        for (int i = 0; i < part.VertexBuffer.VertexCount; i++)
+                        {
+                            _minVector = Vector3.Min(_minVector, vertexData[i].Position);
+                            _maxVector = Vector3.Max(_maxVector, vertexData[i].Position);
+                        }
+                    }
+                }
+
+                Game.SuppressDraw();
+                //Enabled = true;
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("The Model was null for this Entity. " + this);
+            }
         }
         /// <summary>
         /// Return a Model that is loaded from the filename.

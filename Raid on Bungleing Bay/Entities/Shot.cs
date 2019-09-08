@@ -22,6 +22,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Constructor
         public Shot(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
         {
+            //TODO: change this to generated cube.
             Enabled = false;
             _logicRef = gameLogic;
             _lifeTimer = new Timer(game, 3);

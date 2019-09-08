@@ -37,20 +37,15 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         }
         #endregion
-        #region Initialize-Load
+        #region Initialize
         public override void Initialize()
         {
+            LoadModel("MachineGun");
+
             PO.Position.X = -8.25f;
             PO.Position.Y = -12.0f;
 
             base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            LoadModel("MachineGun");
-
-            base.LoadContent();
         }
         #endregion
         #region Update
