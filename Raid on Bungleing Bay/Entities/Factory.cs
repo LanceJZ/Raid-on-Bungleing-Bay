@@ -17,25 +17,16 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
 
         }
+
         public override void Initialize()
         {
             Enabled = true;
             PO.Position.X = 14.5f;
             PO.Position.Y = -42f;
 
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
             LoadModel("Factory");
 
-            base.LoadContent();
-        }
-
-        public override void BeginRun()
-        {
-            base.BeginRun();
+            base.Initialize();
         }
 
         public override void Update(GameTime gameTime)

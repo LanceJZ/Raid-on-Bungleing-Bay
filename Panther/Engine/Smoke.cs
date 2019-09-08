@@ -67,7 +67,7 @@ namespace Panther
                 for (int i = 0; i < more; i++)
                 {
                     Particles.Add(new SmokeParticle(Game, TheCamera, Cube));
-                    Particles.Last().DefuseColor = TheColor;
+                    Particles.Last().DiffuseColor = TheColor;
                 }
             }
 

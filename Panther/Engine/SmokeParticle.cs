@@ -19,11 +19,6 @@ namespace Panther
             base.Initialize();
         }
 
-        public override void BeginRun()
-        {
-            base.BeginRun();
-        }
-
         public override void Update(GameTime gameTime)
         {
             if (LifeTimer.Elapsed)

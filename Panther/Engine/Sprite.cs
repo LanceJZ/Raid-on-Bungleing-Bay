@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System;
 
-namespace Engine
+namespace Panther
 {
     public struct ColorData
     {
@@ -15,7 +15,7 @@ namespace Engine
         }
     }
 
-    public class Sprite : SpritePositionedObject, IDrawComponent
+    public class Sprite : SpritePositionedObject
     {
 
         #region Declarations
@@ -25,6 +25,7 @@ namespace Engine
         List<ColorData> m_ColorData = new List<ColorData>(); //This sprite's frame color data.
         Timer m_FrameTime;
         int m_CurrentFrame;
+        SpriteBatch _spriteBatch;
         public List<SpritePositionedObject> SpriteChildren;
         public Rectangle AABBScaledToFrame;
         public bool Visable = true;
@@ -81,17 +82,17 @@ namespace Engine
         }
 
         #endregion
-        public Sprite(Game game) : base(game)
+        public Sprite(Game game, SpriteBatch spriteBatch) : base(game)
         {
             m_FrameTime = new Timer(game);
             SpriteChildren = new List<SpritePositionedObject>();
+            game.Components.Add(this);
         }
 
         public override void Initialize()
         {
             base.Initialize();
 
-            Core.AddDrawableComponent(this);
             m_FrameTime.Amount = 0.1f;
         }
 
@@ -226,7 +227,7 @@ namespace Engine
             {
                 if (m_Frames.Count > 0)
                 {
-                    Core.SpriteBatch.Draw(m_Texture, Position, Source, m_TintColor, RotationInRadians,
+                    _spriteBatch.Draw(m_Texture, Position, Source, m_TintColor, RotationInRadians,
                         Vector2.Zero, Scale, SpriteEffects.None, 0.0f);
                 }
             }
@@ -237,7 +238,7 @@ namespace Engine
                 {
                     if (child.Active && child.Visable)
                     {
-                        Core.SpriteBatch.Draw(child.Texture, child.Position, child.Source, m_TintColor, child.RotationInRadians,
+                        _spriteBatch.Draw(child.Texture, child.Position, child.Source, m_TintColor, child.RotationInRadians,
                             Vector2.Zero, child.Scale, SpriteEffects.None, 0.0f);
                     }
                 }

@@ -398,7 +398,6 @@ namespace Panther
 
             return position;
         }
-        #endregion
         /// <summary>
         /// Circle collusion detection. Target circle will be compared to this class's.
         /// Will return true of they intersect. Only for use with 2D Z plane.
@@ -497,6 +496,6 @@ namespace Panther
             float amt = Helper.RandomMinMax(speed * 0.15f, speed);
             return VelocityFromAngleZ(ang, amt);
         }
-
+        #endregion
     }
 }

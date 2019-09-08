@@ -8,104 +8,57 @@ using System;
 #endregion
 namespace Panther
 {
-    public class ModelEntity : DrawableGameComponent
+    public class ModelEntity : Entity
     {
         #region Fields
-        string ModelFileName;
-        List<ModelEntity> Children = new List<ModelEntity>();
-        protected Camera TheCamera;
-        protected PositionedObject ThePO;
-        protected Model TheModel;
-        protected GraphicsDevice GD;
-        protected Dictionary<string, Matrix> BaseTransforms = new Dictionary<string, Matrix>();
-        protected Dictionary<string, Matrix> CurrentTransforms = new Dictionary<string, Matrix>();
-        protected Matrix[] BoneTransforms;
-        protected Matrix BaseWorld = Matrix.Identity;
-        protected Vector3 MinVector;
-        protected Vector3 MaxVector;
-        protected Vector3 DrawOffset = Vector3.Zero;
-        public Vector3 DefuseColor = Vector3.One;
-        public Vector3 EmissiveColor = Vector3.Zero;
-        public Vector3 ModelScale = Vector3.One;
+        string _modelFileName;
+        List<ModelEntity> _children = new List<ModelEntity>();
+        bool _modelLoaded;
+        protected Model _model;
+        protected Dictionary<string, Matrix> _baseTransforms = new Dictionary<string, Matrix>();
+        protected Dictionary<string, Matrix> _currentTransforms = new Dictionary<string, Matrix>();
+        protected Matrix[] _boneTransforms;
+        protected Vector3 _minVector;
+        protected Vector3 _maxVector;
         public Vector3 ModelScaleVelocity = Vector3.Zero;
         public Vector3 ModelScaleAcceleration = Vector3.Zero;
         public float Alpha = 1;
-        bool ModelLoaded;
         #endregion
         #region Properties
-        public Camera CameraRef { get => TheCamera; }
-
-        public virtual Vector3 Position
-        {
-            get => ThePO.Position;
-            set => ThePO.Position = value;
-        }
+        public Camera CameraRef { get => _camera; }
 
         public Vector3 WorldPosition
         {
-            get => ThePO.WorldPosition;
-        }
-
-        public virtual Vector3 Velocity
-        {
-            get => ThePO.Velocity;
-            set => ThePO.Velocity = value;
+            get => _PO.WorldPosition;
         }
 
         public Vector3 WorldVelocity
         {
-            get => ThePO.WorldVelocity;
+            get => _PO.WorldVelocity;
         }
 
-        public virtual Vector3 Acceleration
-        {
-            get => ThePO.Acceleration;
-            set => ThePO.Acceleration = value;
-        }
 
         public Vector3 WorldAcceleration
         {
-            get => ThePO.WorldAcceleration;
-        }
-
-        public virtual Vector3 Rotation
-        {
-            get => ThePO.Rotation;
-            set => ThePO.Rotation = value;
+            get => _PO.WorldAcceleration;
         }
 
         public Vector3 WorldRotation
         {
-            get => ThePO.WorldRotation;
-        }
-
-        public virtual Vector3 RotationVelocity
-        {
-            get => ThePO.RotationVelocity;
-            set => ThePO.RotationVelocity = value;
+            get => _PO.WorldRotation;
         }
 
         public Vector3 WorldRotationVelocity
         {
-            get => ThePO.WorldRotationVelocity;
-        }
-
-        public virtual Vector3 RotationAcceleration
-        {
-            get => ThePO.RotationAcceleration;
-            set => ThePO.RotationAcceleration = value;
+            get => _PO.WorldRotationVelocity;
         }
 
         public Vector3 WorldRotationAcceleration
         {
-            get => ThePO.WorldRotationAcceleration;
+            get => _PO.WorldRotationAcceleration;
         }
 
-        public PositionedObject PO { get => ThePO; }
-
-        public Model ModelRef { get => TheModel; }
-
-        public Matrix WorldMatrixRef { get => BaseWorld; }
+        public Model ModelRef { get => _model; }
 
         public BoundingBox Bounds
         {
@@ -117,8 +70,8 @@ namespace Panther
 
                 Matrix transform = scaleMatrix * rotate * translate;
 
-                Vector3 v1 = Vector3.Transform(MinVector, transform);
-                Vector3 v2 = Vector3.Transform(MaxVector, transform);
+                Vector3 v1 = Vector3.Transform(_minVector, transform);
+                Vector3 v2 = Vector3.Transform(_maxVector, transform);
                 Vector3 boxMin = Vector3.Min(v1, v2);
                 Vector3 boxMax = Vector3.Max(v1, v2);
 
@@ -130,39 +83,10 @@ namespace Panther
         {
             get
             {
-                BoundingSphere sphere = TheModel.Meshes[0].BoundingSphere;
+                BoundingSphere sphere = _model.Meshes[0].BoundingSphere;
                 sphere.Radius *= 0.75f;
-                sphere = sphere.Transform(BaseWorld);
+                sphere = sphere.Transform(_world);
                 return sphere;
-            }
-        }
-
-        public float Scale
-        {
-            get => (ModelScale.X + ModelScale.Y + ModelScale.Z) / 3;
-            set => ModelScale = new Vector3(value);
-        }
-
-        public bool Hit
-        {
-            get => ThePO.Hit;
-            set => ThePO.Hit = value;
-        }
-
-        public bool Moveable
-        {
-            get => ThePO.Moveable;
-            set => ThePO.Moveable = value;
-        }
-
-        public new bool Enabled
-        {
-            get => base.Enabled;
-            set
-            {
-                base.Enabled = value;
-                Visible = value;
-                ThePO.Enabled = value;
             }
         }
 
@@ -173,117 +97,63 @@ namespace Panther
             {
                 base.Visible = value;
 
-                foreach (ModelEntity child in Children)
+                foreach (ModelEntity child in _children)
                 {
                     child.Visible = value;
                 }
             }
         }
-
-        public float X { get => ThePO.Position.X; set => ThePO.Position.X = value; }
-        public float Y { get => ThePO.Position.Y; set => ThePO.Position.Y = value; }
-        public float Z { get => ThePO.Position.Z; set => ThePO.Position.Z = value; }
         #endregion
         #region Constructor
-        public ModelEntity(Game game, Camera camera) : base(game)
+        public ModelEntity(Game game, Camera camera) : base(game, camera)
         {
-            TheCamera = camera;
-            ThePO = new PositionedObject(game);
-
-            game.Components.Add(this);
         }
 
-        public ModelEntity(Game game, Camera camera, Model model) : base(game)
+        public ModelEntity(Game game, Camera camera, Model model) : base(game, camera)
         {
-            TheCamera = camera;
-            ThePO = new PositionedObject(game);
             SetModel(model);
-
-            game.Components.Add(this);
         }
 
-        public ModelEntity(Game game, Camera camera, string modelFileName) : base(game)
+        public ModelEntity(Game game, Camera camera, string modelFileName) : base(game, camera)
         {
-            TheCamera = camera;
-            ThePO = new PositionedObject(game);
-            ModelFileName = modelFileName;
-
-            game.Components.Add(this);
+            _modelFileName = modelFileName;
         }
 
-        public ModelEntity(Game game, Camera camera, Model model, Vector3 position) : base(game)
+        public ModelEntity(Game game, Camera camera, Model model, Vector3 position) : base(game, camera)
         {
-            TheCamera = camera;
-            ThePO = new PositionedObject(game);
-            ThePO.Position = position;
+            _PO.Position = position;
             SetModel(model);
-
-            game.Components.Add(this);
         }
 
-        public ModelEntity(Game game, Camera camera, string modelFileName, Vector3 position) : base(game)
+        public ModelEntity(Game game, Camera camera, string modelFileName, Vector3 position) : base(game, camera)
         {
-            TheCamera = camera;
-            ThePO = new PositionedObject(game);
-            ThePO.Position = position;
-            ModelFileName = modelFileName;
-
-            game.Components.Add(this);
+            _PO.Position = position;
+            _modelFileName = modelFileName;
         }
+
         #endregion
-        #region Initialize-Load-BeginRun
+        #region Initialize-Dispose-Remove-Unload
         public override void Initialize()
         {
             base.Initialize();
-            LoadContent();
-            BeginRun();
-        }
 
-        protected override void LoadContent()
-        {
-            if (TheModel == null)
-                LoadModel(ModelFileName);
+            if (_model == null)
+                LoadModel(_modelFileName);
 
-            base.LoadContent();
-        }
-
-        protected override void UnloadContent()
-        {
-            base.UnloadContent();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            TheModel = null;
-
-            base.Dispose(disposing);
-        }
-
-        public void Remove()
-        {
-            Enabled = false;
-            Game.Components.Remove(this);
-            Dispose();
-        }
-
-        public virtual void BeginRun()
-        {
-            //Enabled = false;
-
-            if (TheModel != null)
+            if (_model != null)
             {
-                BoneTransforms = new Matrix[TheModel.Bones.Count];
+                _boneTransforms = new Matrix[_model.Bones.Count];
 
-                for (int i = 1; i < TheModel.Bones.Count; i++)
+                for (int i = 1; i < _model.Bones.Count; i++)
                 {
-                    BaseTransforms[TheModel.Bones[i].Name] = TheModel.Bones[i].Transform;
-                    CurrentTransforms[TheModel.Bones[i].Name] = TheModel.Bones[i].Transform;
+                    _baseTransforms[_model.Bones[i].Name] = _model.Bones[i].Transform;
+                    _currentTransforms[_model.Bones[i].Name] = _model.Bones[i].Transform;
                 }
 
-                MinVector = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-                MaxVector = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+                _minVector = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+                _maxVector = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
-                foreach (ModelMesh mesh in TheModel.Meshes)
+                foreach (ModelMesh mesh in _model.Meshes)
                 {
                     foreach (ModelMeshPart part in mesh.MeshParts)
                     {
@@ -293,8 +163,8 @@ namespace Panther
 
                         for (int i = 0; i < part.VertexBuffer.VertexCount; i++)
                         {
-                            MinVector = Vector3.Min(MinVector, vertexData[i].Position);
-                            MaxVector = Vector3.Max(MaxVector, vertexData[i].Position);
+                            _minVector = Vector3.Min(_minVector, vertexData[i].Position);
+                            _maxVector = Vector3.Max(_maxVector, vertexData[i].Position);
                         }
                     }
                 }
@@ -306,6 +176,26 @@ namespace Panther
             {
                 System.Diagnostics.Debug.WriteLine("The Model was null for this Entity. " + this);
             }
+
+        }
+
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _model = null;
+
+            base.Dispose(disposing);
+        }
+
+        public void Remove()
+        {
+            Enabled = false;
+            Game.Components.Remove(this);
+            Dispose();
         }
         #endregion
         #region Update and Draw
@@ -313,7 +203,7 @@ namespace Panther
         {
             base.Update(gameTime);
 
-            if (Moveable || !ModelLoaded)
+            if (PO.Moveable || !_modelLoaded)
             {
                 MatrixUpdate();
             }
@@ -321,29 +211,29 @@ namespace Panther
 
         public void MatrixUpdate()
         {
-            if (TheModel != null && BoneTransforms != null)
+            if (_model != null && _boneTransforms != null)
             {
-                TheModel.Root.Transform = Matrix.CreateScale(ModelScale) *
-                    RotateMatrix(Rotation) * Matrix.CreateTranslation(Position + DrawOffset);
+                _model.Root.Transform = Matrix.CreateScale(TheScale) *
+                    RotateMatrix(Rotation) * Matrix.CreateTranslation(Position);
 
-                if (ThePO.Child)
+                if (_PO.Child)
                 {
-                    foreach (PositionedObject po in ThePO.ParentPOs)
+                    foreach (PositionedObject po in _PO.ParentPOs)
                     {
-                        TheModel.Root.Transform *=
+                        _model.Root.Transform *=
                             RotateMatrix(po.Rotation) * Matrix.CreateTranslation(po.Position);
                     }
                 }
 
-                foreach (string keys in CurrentTransforms.Keys)
+                foreach (string keys in _currentTransforms.Keys)
                 {
-                    TheModel.Bones[keys].Transform = CurrentTransforms[keys];
+                    _model.Bones[keys].Transform = _currentTransforms[keys];
                 }
 
-                TheModel.CopyAbsoluteBoneTransformsTo(BoneTransforms);
-                BaseWorld = TheModel.Root.Transform;
+                _model.CopyAbsoluteBoneTransformsTo(_boneTransforms);
+                _world = _model.Root.Transform;
 
-                ModelLoaded = true;
+                _modelLoaded = true;
             }
         }
         public override void Draw(GameTime gameTime)
@@ -351,33 +241,31 @@ namespace Panther
             if (!Visible)
                 return;
 
-            if (TheModel == null)
+            if (_model == null)
                 return;
 
-            if (TheCamera == null)
+            if (_camera == null)
             {
-                System.Diagnostics.Debug.WriteLine(
-                    "The Camera is not setup (null) on the class. " + this);
-
+                System.Diagnostics.Debug.WriteLine("The Camera is not setup (null) on the class. " + this);
                 return;
             }
 
-            if (ThePO.Child)
+            if (_PO.Child)
             {
-                if (!ThePO.ParentPO.Enabled)
+                if (!_PO.ParentPO.Enabled)
                     return;
             }
 
             Game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            foreach (ModelMesh mesh in TheModel.Meshes)
+            foreach (ModelMesh mesh in _model.Meshes)
             {
                 foreach (BasicEffect basicEffect in mesh.Effects)
                 {
-                    basicEffect.World = BoneTransforms[mesh.ParentBone.Index];
-                    basicEffect.View = TheCamera.View;
-                    basicEffect.Projection = TheCamera.Projection;
-                    basicEffect.DiffuseColor = DefuseColor;
+                    basicEffect.World = _boneTransforms[mesh.ParentBone.Index];
+                    basicEffect.View = _camera.View;
+                    basicEffect.Projection = _camera.Projection;
+                    basicEffect.DiffuseColor = _diffuseColor;
                     basicEffect.EmissiveColor = EmissiveColor;
                     basicEffect.Alpha = Alpha;
                     basicEffect.EnableDefaultLighting();
@@ -387,41 +275,6 @@ namespace Panther
             }
 
             base.Draw(gameTime);
-        }
-        #endregion
-        #region Spawn
-        /// <summary>
-        /// If position, rotation and velocity are used.
-        /// </summary>
-        /// <param name="position">Position to spawn at.</param>
-        /// <param name="rotation">Rotation to spawn at.</param>
-        /// <param name="velocity">Initial Velocity to spawn with.</param>
-        public virtual void Spawn(Vector3 position, Vector3 rotation, Vector3 velocity)
-        {
-            ThePO.Velocity = velocity;
-            Spawn(position, rotation);
-        }
-        /// <summary>
-        /// If only position and rotation are used.
-        /// </summary>
-        /// <param name="position">Position to spawn at.</param>
-        /// <param name="rotation">Rotation to spawn at.</param>
-        public virtual void Spawn(Vector3 position, Vector3 rotation)
-        {
-            ThePO.Rotation = rotation;
-            Spawn(position);
-        }
-        /// <summary>
-        /// If only position is used.
-        /// </summary>
-        /// <param name="position">Position to spawn at.</param>
-        public virtual void Spawn(Vector3 position)
-        {
-            Enabled = true;
-            Visible = true;
-            ThePO.Hit = false;
-            ThePO.Position = position;
-            MatrixUpdate();
         }
         #endregion
         #region Helper Methods
@@ -442,13 +295,8 @@ namespace Panther
         /// <param name="activeDepedent">True if child active state depends on parent.</param>
         public void AddAsChildOf(ModelEntity parent, bool activeDepedent)
         {
-            parent.Children.Add(this);
-            ThePO.AddAsChildOf(parent.ThePO, activeDepedent);
-        }
-
-        public void ChildLink(bool active)
-        {
-            ThePO.ChildLink(active);
+            parent._children.Add(this);
+            _PO.AddAsChildOf(parent._PO, activeDepedent);
         }
         /// <summary>
         /// Sets the model from a loaded XNA Model.
@@ -458,7 +306,7 @@ namespace Panther
         {
             if (model != null)
             {
-                TheModel = model;
+                _model = model;
             }
         }
         /// <summary>
@@ -467,8 +315,8 @@ namespace Panther
         /// <param name="modelFileName">The file name located at content/Models</param>
         public void LoadModel(string modelFileName)
         {
-            TheModel = Helper.LoadModel(modelFileName);
-            SetModel(TheModel);
+            _model = Helper.LoadModel(modelFileName);
+            SetModel(_model);
         }
         /// <summary>
         /// Return a Model that is loaded from the filename.
@@ -478,11 +326,6 @@ namespace Panther
         public Model Load(string modelFileName)
         {
             return Helper.LoadModel(modelFileName);
-        }
-
-        public Matrix RotateMatrix(Vector3 rotation)
-        {
-            return Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
         }
 
         public bool IsCollision(Model model1, Matrix world1, Model model2, Matrix world2)

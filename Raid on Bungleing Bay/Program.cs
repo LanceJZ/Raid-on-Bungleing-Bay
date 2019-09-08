@@ -13,7 +13,7 @@ namespace Raid_on_Bungleing_Bay
         [STAThread]
         static void Main()
         {
-            using (var game = new Panther())
+            using (Panther game = new Panther())
                 game.Run();
         }
     }

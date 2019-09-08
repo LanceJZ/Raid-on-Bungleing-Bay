@@ -70,11 +70,6 @@ namespace Raid_on_Bungleing_Bay.Entities
             base.LoadContent();
         }
 
-        public override void BeginRun()
-        {
-            base.BeginRun();
-
-        }
         #endregion
         #region Update
         public override void Update(GameTime gameTime)

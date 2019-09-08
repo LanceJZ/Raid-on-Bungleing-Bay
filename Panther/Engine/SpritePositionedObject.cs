@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 #endregion Using
 
-namespace Engine
+namespace Panther
 {
-    public class SpritePositionedObject : GameComponent, IBeginable
+    public class SpritePositionedObject : GameComponent
     {
         #region Fields
 
@@ -237,12 +237,11 @@ namespace Engine
             base.Initialize();
 
             AABB = new Rectangle();
-            Core.AddBeginable(this);
+            //m_ProjectionMatrix = Matrix.CreateOrthographic(Core.WindowWidth, Core.WindowHeight, 1, 2);
         }
 
         public virtual void BeginRun()
         {
-            m_ProjectionMatrix = Matrix.CreateOrthographic(Core.WindowWidth, Core.WindowHeight, 1, 2);
         }
 
         public virtual void AddChild(SpritePositionedObject child, bool activeDependent, bool directConnection)

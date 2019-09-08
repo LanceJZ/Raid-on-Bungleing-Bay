@@ -13,7 +13,7 @@
     <AssemblyName>Panther</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <AssemblyVersion>1.218.2.0</AssemblyVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -44,15 +44,21 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Engine\Camera.cs" />
     <Compile Include="Engine\Cube.cs" />
+    <Compile Include="Engine\Entity.cs" />
     <Compile Include="Engine\Explode.cs" />
     <Compile Include="Engine\ExplodeParticle.cs" />
-    <Compile Include="Engine\Letters.cs" />
+    <Compile Include="Engine\GeneratedShapes.cs" />
+    <Compile Include="Engine\GeneratedText.cs" />
     <Compile Include="Engine\ModelEntity.cs" />
     <Compile Include="Engine\Helper.cs" />
-    <Compile Include="Engine\Numbers.cs" />
+    <Compile Include="Engine\NumberGenerator.cs" />
+    <Compile Include="Engine\NumberGrid.cs" />
     <Compile Include="Engine\PlaneEntity.cs" />
     <Compile Include="Engine\PositionedObject.cs" />
     <Compile Include="Engine\ScreenManager\GameScreen.cs" />
@@ -68,10 +74,14 @@
     <Compile Include="Engine\Screens\OptionsMenuScreen.cs" />
     <Compile Include="Engine\Screens\PauseMenuScreen.cs" />
     <Compile Include="Engine\Screens\PlayerIndexEventArgs.cs" />
+    <Compile Include="Engine\ShapeGenerater.cs" />
     <Compile Include="Engine\Skybox.cs" />
     <Compile Include="Engine\Smoke.cs" />
     <Compile Include="Engine\SmokeParticle.cs" />
     <Compile Include="Engine\Terrain.cs" />
+    <Compile Include="Engine\TextGenerater.cs" />
+    <Compile Include="Engine\TextGenerator.cs" />
+    <Compile Include="Engine\TextGrid.cs" />
     <Compile Include="Engine\Timer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

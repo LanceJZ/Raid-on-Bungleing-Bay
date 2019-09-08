@@ -10,38 +10,38 @@ namespace Raid_on_Bungleing_Bay
 {
     public class Panther : Game
     {
-        GraphicsDeviceManager GDM;
-        SpriteBatch SB;
-        GameLogic TheGame;
-        Camera TheCamera;
-        Timer FPSTimer;
-        KeyboardState OldKeyState;
+        GraphicsDeviceManager _graphics;
+        SpriteBatch _spriteBatch;
+        GameLogic _game;
+        Camera _camera;
+        Timer _FPSTimer;
+        KeyboardState _oldKeyState;
         //float FPSFrames = 0;
-        bool PauseGame;
-        bool NotFirstFrame;
+        bool _pauseGame;
+        bool _notFirstFrame;
 
         public Panther()
         {
-            GDM = new GraphicsDeviceManager(this);
-            GDM.SynchronizeWithVerticalRetrace = true; //When true, 60FSP refresh rate locked.
-            GDM.GraphicsProfile = GraphicsProfile.HiDef;
-            GDM.PreferredBackBufferWidth = 1200;
-            GDM.PreferredBackBufferHeight = 900;
-            GDM.PreferMultiSampling = true; //Error in MonoGame 3.6 for DirectX, fixed in version 3.7.
-            GDM.PreparingDeviceSettings += SetMultiSampling;
-            GDM.ApplyChanges();
-            GDM.GraphicsDevice.RasterizerState = new RasterizerState(); //Must be after Apply Changes.
+            _graphics = new GraphicsDeviceManager(this);
+            _graphics.SynchronizeWithVerticalRetrace = true; //When true, 60FSP refresh rate locked.
+            _graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            _graphics.PreferredBackBufferWidth = 1200;
+            _graphics.PreferredBackBufferHeight = 900;
+            _graphics.PreferMultiSampling = true; //Error in MonoGame 3.6 for DirectX, fixed in version 3.7.
+            _graphics.PreparingDeviceSettings += SetMultiSampling;
+            _graphics.ApplyChanges();
+            _graphics.GraphicsDevice.RasterizerState = new RasterizerState(); //Must be after Apply Changes.
             IsFixedTimeStep = true; //When true, 60FSP refresh rate locked.
 
             Content.RootDirectory = "Content";
 
-            Helper.Initialize(this, GDM);
-            FPSTimer = new Timer(this, 1);
+            Helper.Initialize(this, _graphics);
+            _FPSTimer = new Timer(this, 1);
 
-            TheCamera = new Camera(this, new Vector3(0, 0, 100), new Vector3(0, MathHelper.Pi, 0),
+            _camera = new Camera(this, new Vector3(0, 0, 100), new Vector3(0, MathHelper.Pi, 0),
                 GraphicsDevice.Viewport.AspectRatio, 1f, 1200f);
 
-            TheGame = new GameLogic(this, TheCamera);
+            _game = new GameLogic(this, _camera);
         }
 
         void SetMultiSampling(object sender, PreparingDeviceSettingsEventArgs eventArgs)
@@ -70,9 +70,9 @@ namespace Raid_on_Bungleing_Bay
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            SB = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            TheGame.LoadContent();
+            _game.LoadContent();
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Raid_on_Bungleing_Bay
         protected override void BeginRun()
         {
             base.BeginRun();
-            TheGame.BeginRun();
+            _game.BeginRun();
         }
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -102,15 +102,15 @@ namespace Raid_on_Bungleing_Bay
 
             KeyboardState KBS = Keyboard.GetState();
 
-            if (TheGame.CurrentMode == GameState.InPlay)
+            if (_game.CurrentMode == GameState.InPlay)
             {
-                if (!OldKeyState.IsKeyDown(Keys.P) && KBS.IsKeyDown(Keys.P))
-                    PauseGame = !PauseGame;
+                if (!_oldKeyState.IsKeyDown(Keys.P) && KBS.IsKeyDown(Keys.P))
+                    _pauseGame = !_pauseGame;
             }
 
-            OldKeyState = Keyboard.GetState();
+            _oldKeyState = Keyboard.GetState();
 
-            if (!PauseGame)
+            if (!_pauseGame)
                 base.Update(gameTime);
 
             //FPSFrames++;
@@ -131,13 +131,14 @@ namespace Raid_on_Bungleing_Bay
         {
             GraphicsDevice.Clear(Color.Blue);
 
-            if (NotFirstFrame)
+
+            if (_notFirstFrame)
             {
                 base.Draw(gameTime);
             }
             else
             {
-                NotFirstFrame = true;
+                _notFirstFrame = true;
             }
         }
     }

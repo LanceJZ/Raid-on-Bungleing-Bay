@@ -29,18 +29,6 @@ namespace Panther
         {
             TheColor = Vector3.One;
             base.Initialize();
-            LoadContent();
-            BeginRun();
-        }
-
-        public void LoadContent()
-        {
-
-        }
-
-        public void BeginRun()
-        {
-
         }
 
         public override void Update(GameTime gameTime)
@@ -90,7 +78,7 @@ namespace Panther
                     Helper.RandomMinMax(-radius, radius), 0);
 
                 particle.Spawn(position, speed, scale, life);
-                particle.DefuseColor = TheColor;
+                particle.DiffuseColor = TheColor;
                 particle.EmissiveColor = TheEmissiveColor;
             }
         }
