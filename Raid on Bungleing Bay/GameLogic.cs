@@ -23,9 +23,9 @@ namespace Raid_on_Bungleing_Bay
 
         GameState _mode = GameState.InPlay;
         KeyboardState _oldKeyState;
-        NumberGenerator _score;
+        public NumberGenerator _score;
 
-        Land _land;
+        public Land _land;
         Factory TheFactory;
         Tank TheTank;
         Machinegun TheMachinegun;

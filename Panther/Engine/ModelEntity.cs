@@ -278,7 +278,7 @@ namespace Panther
         public void LoadModel(string modelFileName)
         {
             _model = Helper.LoadModel(modelFileName);
-            SetModel(_model);
+            SetModel(_model); //TODO: Set sphere from model mesh.
 
             if (_model != null)
             {

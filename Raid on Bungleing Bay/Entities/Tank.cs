@@ -28,8 +28,8 @@ namespace Raid_on_Bungleing_Bay.Entities
     class Tank : ModelEntity
     {
         #region Fields
-        Shot _shot;
         GameLogic _logicRef;
+        Shot _shot;
         Player _playerRef;
         Mode _currentMode = Mode.idle;
         Heading _currentHeading = Heading.toEnd;
@@ -80,7 +80,7 @@ namespace Raid_on_Bungleing_Bay.Entities
                     SearchForPlayer();
                     break;
                 case Mode.move:
-                    MoveTank();
+                    Move();
                     break;
                 case Mode.fire:
                     FireShot();
@@ -142,7 +142,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
         }
 
-        void MoveTank()
+        void Move()
         {
             switch (_currentHeading)
             {
