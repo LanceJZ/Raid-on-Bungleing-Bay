@@ -34,6 +34,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             _logicRef = gameLogic;
             _landRef = gameLogic._land;
+            _playerRef = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
             _searchForPlayerTimer = new Timer(game, 1);
             //Enabled = false;
@@ -49,6 +50,8 @@ namespace Raid_on_Bungleing_Bay.Entities
             base.Initialize();
 
             LoadModel("JetPlane");
+
+            float rad = PO.Radius;
         }
         #endregion
         #region Update

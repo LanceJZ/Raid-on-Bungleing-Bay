@@ -65,6 +65,8 @@ namespace Raid_on_Bungleing_Bay.Entities
             base.Initialize();
 
             LoadModel("Tank");
+
+            float rad = PO.Radius;
         }
         #endregion
         #region Update

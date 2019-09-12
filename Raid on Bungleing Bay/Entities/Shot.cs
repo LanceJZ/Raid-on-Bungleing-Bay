@@ -10,23 +10,24 @@ using Panther;
 #endregion
 namespace Raid_on_Bungleing_Bay.Entities
 {
-    class Shot : Cube
+    class Shot : ShapeGenerater
     {
         #region Fields
         GameLogic _logicRef;
         Timer _lifeTimer;
+        //ShapeGenerater _cube;
         #endregion
         #region Properties
 
         #endregion
         #region Constructor
-        public Shot(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
+        public Shot(Game game, Camera camera, GameLogic gameLogic) : base(game, camera, GeneratedShapes.Cube(), 12)
         {
             //TODO: change this to generated cube.
             Enabled = false;
             _logicRef = gameLogic;
             _lifeTimer = new Timer(game, 3);
-
+            //_cube = new ShapeGenerater(game, camera, GeneratedShapes.Cube(), 12);
         }
         #endregion
         #region Initialize-Load
@@ -34,12 +35,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             Scale = 0.5f;
             base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-
-            base.LoadContent();
         }
         #endregion
         #region Update

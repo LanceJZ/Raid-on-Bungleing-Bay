@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Panther
 {
-    class ShapeGenerater : Entity
+    public class ShapeGenerater : Entity
     {
         VertexPositionNormalTexture[] _shape;
         List<ShapeGenerater> _children = new List<ShapeGenerater>();

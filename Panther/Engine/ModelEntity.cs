@@ -282,6 +282,40 @@ namespace Panther
 
             if (_model != null)
             {
+                BoundingBox bbox = GetBounds(_model);
+
+                bbox.Max.X = Math.Abs(bbox.Max.X);
+                bbox.Max.Y = Math.Abs(bbox.Max.Y);
+                bbox.Max.Z = Math.Abs(bbox.Max.Z);
+                bbox.Min.X = Math.Abs(bbox.Min.X);
+                bbox.Min.Y = Math.Abs(bbox.Min.Y);
+                bbox.Min.Z = Math.Abs(bbox.Min.Z);
+
+                float max = 0;
+
+                if (bbox.Max.X > max)
+                    max = bbox.Max.X;
+
+                if (bbox.Max.Y > max)
+                    max = bbox.Max.Y;
+
+                if (bbox.Max.Z > max)
+                    max = bbox.Max.Z;
+
+                if (bbox.Min.X > max)
+                    max = bbox.Min.X;
+
+                if (bbox.Min.Y > max)
+                    max = bbox.Min.Y;
+
+                if (bbox.Min.Z > max)
+                    max = bbox.Min.Z;
+
+                PO.Radius = max;
+            }
+
+            if (_model != null)
+            {
                 _boneTransforms = new Matrix[_model.Bones.Count];
 
                 for (int i = 1; i < _model.Bones.Count; i++)
@@ -344,6 +378,35 @@ namespace Panther
                 }
             }
             return false;
+        }
+        #endregion
+        #region Private methods
+        public BoundingBox GetBounds(Model model)
+        {
+            Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (ModelMeshPart meshPart in mesh.MeshParts)
+                {
+                    int vertexStride = meshPart.VertexBuffer.VertexDeclaration.VertexStride;
+                    int vertexBufferSize = meshPart.NumVertices * vertexStride;
+
+                    int vertexDataSize = vertexBufferSize / sizeof(float);
+                    float[] vertexData = new float[vertexDataSize];
+                    meshPart.VertexBuffer.GetData<float>(vertexData);
+
+                    for (int i = 0; i < vertexDataSize; i += vertexStride / sizeof(float))
+                    {
+                        Vector3 vertex = new Vector3(vertexData[i], vertexData[i + 1], vertexData[i + 2]);
+                        min = Vector3.Min(min, vertex);
+                        max = Vector3.Max(max, vertex);
+                    }
+                }
+            }
+
+            return new BoundingBox(min, max);
         }
         #endregion
     }
