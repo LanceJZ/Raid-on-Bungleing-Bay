@@ -44,14 +44,13 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Initialize
         public override void Initialize()
         {
-            Position = new Vector3(-25, 25, 0);
+            Position = new Vector3(-5, -5, 10);
 
 
             base.Initialize();
 
             LoadModel("JetPlane");
 
-            float rad = PO.Radius;
         }
         #endregion
         #region Update

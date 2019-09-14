@@ -23,6 +23,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             Enabled = true;
             PO.Position.X = 14.5f;
             PO.Position.Y = -42f;
+            PO.Position.Z = 1;
 
             LoadModel("Factory");
 

@@ -33,7 +33,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Initialize-Load
         public override void Initialize()
         {
-            Scale = 0.5f;
+            Scale = 0.25f;
             base.Initialize();
         }
         #endregion

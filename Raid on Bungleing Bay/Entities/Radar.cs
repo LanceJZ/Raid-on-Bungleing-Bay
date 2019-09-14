@@ -32,7 +32,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             base.Initialize();
 
-            Position = new Vector3(13, -22f, 0);
+            Position = new Vector3(13, -22f, 1);
             PO.RotationVelocity.Z = 1;
 
             LoadModel("Radar");

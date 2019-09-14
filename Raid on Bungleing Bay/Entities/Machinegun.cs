@@ -44,6 +44,7 @@ namespace Raid_on_Bungleing_Bay.Entities
 
             PO.Position.X = -8.25f;
             PO.Position.Y = -12.0f;
+            PO.Position.Z = 1;
 
             base.Initialize();
         }

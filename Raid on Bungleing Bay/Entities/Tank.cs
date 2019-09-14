@@ -57,6 +57,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             PO.Position.X = 28;
             PO.Position.Y = -38;
+            PO.Position.Z = 1;
             PO.Rotation.Z = MathHelper.Pi / 2;
             _patrolStart = Position;
             _patrolEnd = Position;

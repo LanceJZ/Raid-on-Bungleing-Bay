@@ -23,7 +23,7 @@ namespace Panther
         public Vector3 Rotation = Vector3.Zero;
         public Vector3 RotationVelocity = Vector3.Zero;
         public Vector3 RotationAcceleration = Vector3.Zero;
-        Vector2 TheHeightWidth;
+        Vector2 TheWidthHeight;
         float TheElapsedGameTime;
         float TheScalePercent = 1;
         float GameRefScale = 1;
@@ -193,13 +193,17 @@ namespace Panther
         /// </summary>
         public bool Debug { set => InDebugMode = value; }
 
-        public Vector2 WidthHeight { get => TheHeightWidth; set => TheHeightWidth = value; }
+        public Vector2 WidthHeight { get => TheWidthHeight; set => TheWidthHeight = value; }
 
         public float GameScale { get => GameRefScale; set => GameRefScale = value; }
-
+        /// <summary>
+        /// Reads Width hight at current Position X and Y.
+        /// Writes Width and Height.
+        /// </summary>
         public Rectangle BoundingBox
         {
             get => new Rectangle((int)Position.X, (int)Position.Y, (int)WidthHeight.X, (int)WidthHeight.Y);
+            set { TheWidthHeight.X = value.Width; TheWidthHeight.Y = value.Width; }
         }
 
         public float X { get => Position.X; set => Position.X = value; }
