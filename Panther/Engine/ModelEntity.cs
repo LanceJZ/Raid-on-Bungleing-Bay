@@ -291,7 +291,7 @@ namespace Panther
                 bbox.Min.Y = Math.Abs(bbox.Min.Y);
                 bbox.Min.Z = Math.Abs(bbox.Min.Z);
 
-                Rectangle bounds = new Rectangle;
+                Rectangle bounds = new Rectangle();
                 bounds.Width = (int)bbox.Max.X + (int)bbox.Min.X;
                 bounds.Height = (int)bbox.Max.Y + (int)bbox.Min.Y;
                 PO.BoundingBox = bounds;
