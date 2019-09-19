@@ -16,6 +16,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         ModelEntity _blade;
         ModelEntity _rotor;
         GameLogic _logicRef;
+        Land _landRef;
         #endregion
         #region Properties
 
@@ -25,6 +26,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             Enabled = true;
             _logicRef = gameLogic;
+            _landRef = gameLogic._land;
             _blade = new ModelEntity(game, camera);
             _rotor = new ModelEntity(game, camera);
         }
@@ -49,6 +51,8 @@ namespace Raid_on_Bungleing_Bay.Entities
             _blade.LoadModel("Player-Blade");
             _rotor.LoadModel("Player-Rotor");
 
+            PO.MapSize = new Vector2(_landRef.BoundingBox.Width, _landRef.BoundingBox.Height);
+
             base.Initialize();
         }
         #endregion
@@ -59,6 +63,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             CameraRef.MoveTo(new Vector3(PO.Position.X, PO.Position.Y, CameraRef.Position.Z));
 
             _blade.PO.RotationVelocity.Z = 12 - RotationVelocity.Z;
+            PO.CheckEdgeOfMap();
 
             base.Update(gameTime);
         }
@@ -70,12 +75,12 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             if (Helper.KeyDown(Keys.Up))
             {
-                if (MaxVelocity(500, PO.Velocity))
+                if (MaxVelocity(100, PO.Velocity))
                     PO.Acceleration = Helper.VelocityFromAngleZ(PO.Rotation.Z, 10);
             }
             else if (Helper.KeyDown(Keys.Down))
             {
-                if (MaxVelocity(200, PO.Velocity))
+                if (MaxVelocity(50, PO.Velocity))
                     PO.Acceleration = Helper.VelocityFromAngleZ(PO.Rotation.Z, -6);
             }
             else

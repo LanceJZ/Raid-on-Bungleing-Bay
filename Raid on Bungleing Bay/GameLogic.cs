@@ -83,7 +83,7 @@ namespace Raid_on_Bungleing_Bay
 
             if (KBS != _oldKeyState)
             {
-                if (Helper.KeyPressed(Keys.P))
+                if (Helper.KeyPressed(Keys.L))
                 {
                     System.Diagnostics.Debug.WriteLine("Location is " + _player.Position.ToString());
                 }

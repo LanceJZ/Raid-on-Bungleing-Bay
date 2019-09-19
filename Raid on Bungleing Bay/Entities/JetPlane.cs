@@ -18,12 +18,11 @@ namespace Raid_on_Bungleing_Bay.Entities
         Player _playerRef;
         Land _landRef;
         Mode _currentMode = Mode.idle;
-        Heading _currentHeading = Heading.toEnd;
         Timer _searchForPlayerTimer;
+        Timer _changeCourseTimer;
         Vector3 _targetPos;
         Vector3 _targetOldPos;
-        Vector3 _patrolStart;
-        Vector3 _patrolEnd;
+        Vector2 _widthHeight;
 
         #endregion
         #region Properties
@@ -37,20 +36,24 @@ namespace Raid_on_Bungleing_Bay.Entities
             _playerRef = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
             _searchForPlayerTimer = new Timer(game, 1);
-            //Enabled = false;
+            _changeCourseTimer = new Timer(game, 5);
 
+            //Enabled = false;
         }
         #endregion
         #region Initialize
         public override void Initialize()
         {
-            Position = new Vector3(-5, -5, 10);
+            Position = new Vector3(-2, -2, 10);
 
 
             base.Initialize();
 
             LoadModel("JetPlane");
 
+            ChangeHeading();
+
+            PO.MapSize = new Vector2(_landRef.BoundingBox.Width, _landRef.BoundingBox.Height);
         }
         #endregion
         #region Update
@@ -75,10 +78,7 @@ namespace Raid_on_Bungleing_Bay.Entities
                     break;
             }
 
-            if (Position.X > _landRef.BoundingBox.Width)
-            {
-
-            }
+            PO.CheckEdgeOfMap();
 
             base.Update(gameTime);
         }
@@ -86,16 +86,23 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Public methods
         #endregion
         #region Private/Protected methods
-        void CheckEdgeOfMap()
-        {
-
-        }
 
         void Idle()
         {
-
             if (_searchForPlayerTimer.Elapsed)
                 _currentMode = Mode.search;
+
+            if (_changeCourseTimer.Elapsed)
+                ChangeHeading();
+        }
+
+        void ChangeHeading()
+        {
+            _changeCourseTimer.Reset();
+
+            float heading = Helper.Radian;
+            PO.Rotation.Z = heading;
+            Velocity = Helper.VelocityFromAngleZ(heading, 15);
         }
 
         void Move()
@@ -109,12 +116,11 @@ namespace Raid_on_Bungleing_Bay.Entities
 
             if (Helper.RandomMinMax(0, 10) > 1)
             {
-                if (Vector3.Distance(Position, _playerRef.Position) < 20) //35 works for game.
+                if (Vector3.Distance(Position, _playerRef.Position) < 35) //35 works for game.
                 {
                     _targetOldPos = _targetPos;
                     _targetPos = _playerRef.Position;
                     _currentMode = Mode.turn;
-                    Velocity = Vector3.Zero;
                     RotationVelocity = Vector3.Zero;
                 }
                 else
@@ -132,21 +138,21 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             PO.RotationAcceleration.Z = Helper.AimAtTargetZ(Position, _targetPos, Rotation.Z, 0.15f);
 
-            if (PO.RotationVelocity.Z > 0.25f)
+            if (PO.RotationVelocity.Z > 0.75f)
             {
-                PO.RotationVelocity.Z = 0.25f;
+                PO.RotationVelocity.Z = 0.75f;
                 PO.RotationAcceleration.Z = 0;
             }
 
-            if (PO.RotationVelocity.Z < -0.25f)
+            if (PO.RotationVelocity.Z < -0.75f)
             {
-                PO.RotationVelocity.Z = -0.25f;
+                PO.RotationVelocity.Z = -0.75f;
                 PO.RotationAcceleration.Z = 0;
             }
 
             float tAngle = Rotation.Z;
             float pAngle = Helper.AngleFromVectorsZ(Position, _targetPos);
-            float aDiffernce = 0;
+            float aDiffernce;
 
             if (tAngle < pAngle)
             {
@@ -163,11 +169,13 @@ namespace Raid_on_Bungleing_Bay.Entities
                 PO.RotationAcceleration.Z = 0;
                 _currentMode = Mode.fire;
             }
+
+            Velocity = Helper.VelocityFromAngleZ(Rotation.Z, 15);
         }
 
         void FireShot()
         {
-            _shot.Fire(Position, Helper.VelocityFromAngleZ(PO.Rotation.Z, 10));
+            _shot.Fire(Position, Helper.VelocityFromAngleZ(PO.Rotation.Z, 20));
             _searchForPlayerTimer.Reset();
             _currentMode = Mode.idle;
         }

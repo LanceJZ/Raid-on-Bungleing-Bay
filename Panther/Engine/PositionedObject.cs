@@ -23,7 +23,8 @@ namespace Panther
         public Vector3 Rotation = Vector3.Zero;
         public Vector3 RotationVelocity = Vector3.Zero;
         public Vector3 RotationAcceleration = Vector3.Zero;
-        Vector2 TheWidthHeight;
+        Vector2 _widthHeight;
+        Vector2 _mapSize;
         float TheElapsedGameTime;
         float TheScalePercent = 1;
         float GameRefScale = 1;
@@ -193,7 +194,7 @@ namespace Panther
         /// </summary>
         public bool Debug { set => InDebugMode = value; }
 
-        public Vector2 WidthHeight { get => TheWidthHeight; set => TheWidthHeight = value; }
+        public Vector2 WidthHeight { get => _widthHeight; set => _widthHeight = value; }
 
         public float GameScale { get => GameRefScale; set => GameRefScale = value; }
         /// <summary>
@@ -203,12 +204,13 @@ namespace Panther
         public Rectangle BoundingBox
         {
             get => new Rectangle((int)Position.X, (int)Position.Y, (int)WidthHeight.X, (int)WidthHeight.Y);
-            set { TheWidthHeight.X = value.Width; TheWidthHeight.Y = value.Width; }
+            set { _widthHeight.X = value.Width; _widthHeight.Y = value.Height; }
         }
 
         public float X { get => Position.X; set => Position.X = value; }
         public float Y { get => Position.Y; set => Position.Y = value; }
         public float Z { get => Position.Z; set => Position.Z = value; }
+        public Vector2 MapSize { get => _mapSize; set => _mapSize = value; }
         #endregion
         #region Constructor
         /// <summary>
@@ -333,6 +335,29 @@ namespace Panther
 
             Child = active;
             ParentPO.Parent = active;
+        }
+
+        public void CheckEdgeOfMap()
+        {
+            Vector2 edgeFromCenter = _mapSize * 0.5f;
+
+            if (Position.X > edgeFromCenter.X)
+            {
+                Position.X -= _mapSize.X - Radius;
+            }
+            else if (Position.X < -edgeFromCenter.X)
+            {
+                Position.X += _mapSize.X - Radius;
+            }
+
+            if (Position.Y > edgeFromCenter.Y)
+            {
+                Position.Y -= _mapSize.Y - Radius;
+            }
+            else if (Position.Y < -edgeFromCenter.Y)
+            {
+                Position.Y += _mapSize.Y - Radius;
+            }
         }
 
         public void Remove()

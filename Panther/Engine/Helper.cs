@@ -43,6 +43,10 @@ namespace Panther
             get => new Vector2(TheGraphicsDM.PreferredBackBufferWidth,
                 TheGraphicsDM.PreferredBackBufferHeight);
         }
+        /// <summary>
+        /// A random number from 0 to Pi * 2;
+        /// </summary>
+        public static float Radian { get => RandomRadian(); }
         #endregion
         #region Initialize
         public static void Initialize(Game game, GraphicsDeviceManager graphicsDeviceManager)
@@ -502,12 +506,19 @@ namespace Panther
         {
             return WrapAngle((float)(Math.Atan2(target.Y - origin.Y, target.X - origin.X)));
         }
-
+        /// <summary>
+        /// Return a number from 0 to Pi times two.
+        /// </summary>
+        /// <returns></returns>
         public static float RandomRadian()
         {
             return Helper.RandomMinMax(0, MathHelper.TwoPi);
         }
-
+        /// <summary>
+        /// Generates a random velocity based on speed.
+        /// </summary>
+        /// <param name="speed"></param>
+        /// <returns>Vector3</returns>
         public static Vector3 RandomVelocity(float speed)
         {
             float ang = RandomRadian();
