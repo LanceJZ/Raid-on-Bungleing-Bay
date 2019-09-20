@@ -21,6 +21,15 @@ namespace Raid_on_Bungleing_Bay.Entities
         ModelEntity bottomMid;
         ModelEntity topLeft;
         ModelEntity bottomLeft;
+
+        ModelEntity topMidOtherSide;
+        ModelEntity topRightOtherSide;
+        ModelEntity topLeftOtherSide;
+        ModelEntity topRightEdgeOtherSide;
+
+        ModelEntity bottomRightOtherSide;
+        ModelEntity bottomRightEdgeOtherSide;
+
         GameLogic LogicRef;
         #endregion
         #region Properties
@@ -40,6 +49,14 @@ namespace Raid_on_Bungleing_Bay.Entities
             bottomMid = new ModelEntity(game, camera);
             topLeft = new ModelEntity(game, camera);
             bottomLeft = new ModelEntity(game, camera);
+
+            topMidOtherSide = new ModelEntity(game, camera);
+            topRightOtherSide = new ModelEntity(game, camera);
+            topLeftOtherSide = new ModelEntity(game, camera);
+            topRightEdgeOtherSide = new ModelEntity(game, camera);
+
+            bottomRightOtherSide = new ModelEntity(game, camera);
+            bottomRightEdgeOtherSide = new ModelEntity(game, camera);
         }
         #endregion
         #region Initialize-BeginRun
@@ -54,6 +71,15 @@ namespace Raid_on_Bungleing_Bay.Entities
             bottomLeft.PO.AddAsChildOf(this);
             topMid.PO.AddAsChildOf(this);
             topLeft.PO.AddAsChildOf(this);
+
+            topMidOtherSide.PO.AddAsChildOf(this);
+            topRightOtherSide.PO.AddAsChildOf(this);
+            topLeftOtherSide.PO.AddAsChildOf(this);
+            topRightEdgeOtherSide.PO.AddAsChildOf(this);
+
+            bottomRightOtherSide.PO.AddAsChildOf(this);
+            bottomRightEdgeOtherSide.PO.AddAsChildOf(this);
+
             Rotation.X = -MathHelper.Pi / 2;
         }
 
@@ -69,6 +95,23 @@ namespace Raid_on_Bungleing_Bay.Entities
             bottomLeft.LoadModel("Land-5-Bottom left");
             topMid.LoadModel("Land-6-Top mid");
             topLeft.LoadModel("Land-7-Top left");
+
+            topMidOtherSide.LoadModel("Land-6-Top mid");
+            topMidOtherSide.PO.Position.Z = -250;
+
+            topRightOtherSide.LoadModel("Land-3-top right");
+            topRightOtherSide.PO.Position.Z = -250;
+
+            topLeftOtherSide.LoadModel("Land-7-Top left");
+            topLeftOtherSide.PO.Position.Z = -250;
+
+            topRightEdgeOtherSide.LoadModel("Land-1-Right edge");
+            topRightEdgeOtherSide.PO.Position.Z = -250;
+
+            bottomRightOtherSide.LoadModel("Land-2-Bottom right map");
+            bottomRightOtherSide.PO.Position.Z = 250;
+            bottomRightEdgeOtherSide.LoadModel("Land-0-Right edge");
+            bottomRightEdgeOtherSide.PO.Position.Z = 250;
 
             BoundingBox = new Rectangle(0, 0, 400, 250);
         }

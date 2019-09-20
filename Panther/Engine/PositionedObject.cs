@@ -343,20 +343,20 @@ namespace Panther
 
             if (Position.X > edgeFromCenter.X)
             {
-                Position.X -= _mapSize.X - Radius;
+                Position.X -= _mapSize.X;
             }
             else if (Position.X < -edgeFromCenter.X)
             {
-                Position.X += _mapSize.X - Radius;
+                Position.X += _mapSize.X;
             }
 
             if (Position.Y > edgeFromCenter.Y)
             {
-                Position.Y -= _mapSize.Y - Radius;
+                Position.Y -= _mapSize.Y;
             }
             else if (Position.Y < -edgeFromCenter.Y)
             {
-                Position.Y += _mapSize.Y - Radius;
+                Position.Y += _mapSize.Y;
             }
         }
 
