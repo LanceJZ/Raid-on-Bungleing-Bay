@@ -22,7 +22,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         Timer _changeCourseTimer;
         Vector3 _targetPos;
         Vector3 _targetOldPos;
-        Vector2 _widthHeight;
+        //Vector2 _widthHeight;
 
         #endregion
         #region Properties
