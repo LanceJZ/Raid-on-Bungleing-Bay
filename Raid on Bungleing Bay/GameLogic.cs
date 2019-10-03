@@ -6,6 +6,7 @@ using System.Linq;
 using System;
 using Panther;
 using Raid_on_Bungleing_Bay.Entities;
+using Raid_on_Bungleing_Bay.Controllers;
 
 public enum GameState
 {
@@ -26,7 +27,7 @@ namespace Raid_on_Bungleing_Bay
         public NumberGenerator _score;
 
         public Land _land;
-        Factory TheFactory;
+        Factories _factories;
         Tank TheTank;
         Machinegun TheMachinegun;
         Radar TheRadar;
@@ -49,7 +50,7 @@ namespace Raid_on_Bungleing_Bay
             _score = new NumberGenerator(game);
             _land = new Land(game, camera, this);
             _player = new Player(game, camera, this);
-            TheFactory = new Factory(game, camera, this);
+            _factories = new Factories(game, camera, this);
             TheTank = new Tank(game, camera, this);
             TheMachinegun = new Machinegun(game, camera, this);
             TheRadar = new Radar(game, camera, this);

@@ -13,18 +13,14 @@ namespace Raid_on_Bungleing_Bay.Entities
 {
     class Factory : ModelEntity
     {
-        public Factory (Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
+        public Factory (Game game, Camera camera, GameLogic gameLogic, Vector3 position) : base(game, camera)
         {
-
+            Position = position;
         }
 
         public override void Initialize()
         {
             Enabled = true;
-            PO.Position.X = 14.5f;
-            PO.Position.Y = -42f;
-            PO.Position.Z = 1;
-
             LoadModel("Factory");
 
             base.Initialize();
