@@ -8,6 +8,9 @@ using Panther;
 using Raid_on_Bungleing_Bay.Entities;
 using Raid_on_Bungleing_Bay.Controllers;
 
+// Hide/Show regions.
+// Ctrl-M, Ctrl-O will collapse all of the code to its definitions.
+// Ctrl-M, Ctrl-L will expand all of the code(actually, this one toggles it).
 public enum GameState
 {
     Over,
@@ -18,7 +21,7 @@ public enum GameState
 
 namespace Raid_on_Bungleing_Bay
 {
-    class GameLogic : GameComponent
+    public class GameLogic : GameComponent
     {
         Camera _camera;
 
@@ -29,10 +32,12 @@ namespace Raid_on_Bungleing_Bay
         public Land _land;
         Factories _factories;
         Tank TheTank;
-        Machinegun TheMachinegun;
+        Guns _guns;
         Radar TheRadar;
         JetPlane TheJet;
         public Player _player;
+        bool _devMode = true;
+        MapCross _mapCross;
 
         public GameState CurrentMode { get => _mode; }
 
@@ -51,10 +56,12 @@ namespace Raid_on_Bungleing_Bay
             _land = new Land(game, camera, this);
             _player = new Player(game, camera, this);
             _factories = new Factories(game, camera, this);
+            _guns = new Guns(game, camera, this);
             TheTank = new Tank(game, camera, this);
-            TheMachinegun = new Machinegun(game, camera, this);
             TheRadar = new Radar(game, camera, this);
             TheJet = new JetPlane(game, camera, this);
+
+            _mapCross = new MapCross(game, camera);
 
             game.Components.Add(this);
         }
@@ -80,19 +87,15 @@ namespace Raid_on_Bungleing_Bay
 
         public override void Update(GameTime gameTime)
         {
-            KeyboardState KBS = Keyboard.GetState();
+            Helper.BeginKeyPressed();
 
-            if (KBS != _oldKeyState)
+            if (Helper.KeyPressed(Keys.O))
             {
-                if (Helper.KeyPressed(Keys.L))
-                {
-                    System.Diagnostics.Debug.WriteLine("Location is " + _player.Position.ToString());
-                }
-
+                _player.Enabled = !_player.Enabled;
+                _mapCross.Enabled = !_mapCross.Enabled;
             }
 
-            _oldKeyState = Keyboard.GetState();
-
+            Helper.EndKeyPressed();
             base.Update(gameTime);
         }
     }

@@ -125,9 +125,18 @@ namespace Panther
             return false;
         }
 
-        public static bool KeyPressed(Keys key)
+        public static void BeginKeyPressed()
         {
             KeyState = Keyboard.GetState();
+        }
+
+        public static void EndKeyPressed()
+        {
+            KeyStateOld = KeyState;
+        }
+
+        public static bool KeyPressed(Keys key)
+        {
 
             if (KeyState != KeyStateOld)
             {
@@ -135,7 +144,6 @@ namespace Panther
                     return true;
             }
 
-            KeyStateOld = KeyState;
             return false;
         }
 

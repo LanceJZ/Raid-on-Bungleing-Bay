@@ -49,6 +49,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Guns.cs" />
     <Compile Include="Controllers\Factories.cs" />
     <Compile Include="Entities\JetPlane.cs" />
     <Compile Include="Entities\Machinegun.cs" />
@@ -128,6 +129,9 @@
       <Project>{a1cc0fae-b85e-4534-8693-e44982aef5cb}</Project>
       <Name>Panther</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\DesktopGL\AnyCPU\Debug\pointesOfInterest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

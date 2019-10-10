@@ -29,7 +29,7 @@ namespace Panther
 
         public void Spawn(Vector3 position, float size, float drift, float speed, float life)
         {
-            Scale = Helper.RandomMinMax(size / 2, size);
+            ScaleAll = Helper.RandomMinMax(size / 2, size);
             LifeTimer.Reset(Helper.RandomMinMax(life / 10, life));
             Vector3 velocity;
             velocity.Y = Helper.RandomMinMax(speed / 10, speed);

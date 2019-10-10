@@ -10,7 +10,7 @@ using Panther;
 #endregion
 namespace Raid_on_Bungleing_Bay.Entities
 {
-    class Land : PositionedObject
+    public class Land : PositionedObject
     {
         #region Fields
         ModelEntity topRightEdge;

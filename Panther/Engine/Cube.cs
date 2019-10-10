@@ -11,7 +11,6 @@ namespace Panther
     public class Cube : ModelEntity
     {
         #region Fields
-
         #endregion
         #region Properties
 
@@ -19,23 +18,20 @@ namespace Panther
         #region Constructor
         public Cube(Game game, Camera camera) : base(game, camera)
         {
+
         }
         #endregion
-        #region Initialize-Load-BeginRun
+        #region Initialize
         public override void Initialize()
         {
             base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
             LoadModel("Core/Cube");
-            base.LoadContent();
         }
         #endregion
         #region Update
         public override void Update(GameTime gameTime)
         {
+
             base.Update(gameTime);
         }
         #endregion

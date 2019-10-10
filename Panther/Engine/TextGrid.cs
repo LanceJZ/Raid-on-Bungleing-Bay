@@ -155,21 +155,21 @@ namespace Panther
         public void ChangeScale(float scale)
         {
             Scale = scale;
-            _HBLine.Scale = Scale;
-            _HTLine.Scale = Scale;
-            _VBLLine.Scale = Scale;
-            _VBRLine.Scale = Scale;
-            _VTLLine.Scale = Scale;
-            _VTRLine.Scale = Scale;
-            _MRLine.Scale = Scale;
-            _MLLine.Scale = Scale;
-            _CTLine.Scale = Scale;
-            _CBLine.Scale = Scale;
-            _DTRLine.Scale = Scale;
-            _DTLLine.Scale = Scale;
-            _DBRLine.Scale = Scale;
-            _DBLLine.Scale = Scale;
-            _backplate.Scale = Scale;
+            _HBLine.ScaleAll = Scale;
+            _HTLine.ScaleAll = Scale;
+            _VBLLine.ScaleAll = Scale;
+            _VBRLine.ScaleAll = Scale;
+            _VTLLine.ScaleAll = Scale;
+            _VTRLine.ScaleAll = Scale;
+            _MRLine.ScaleAll = Scale;
+            _MLLine.ScaleAll = Scale;
+            _CTLine.ScaleAll = Scale;
+            _CBLine.ScaleAll = Scale;
+            _DTRLine.ScaleAll = Scale;
+            _DTLLine.ScaleAll = Scale;
+            _DBRLine.ScaleAll = Scale;
+            _DBLLine.ScaleAll = Scale;
+            _backplate.ScaleAll = Scale;
         }
 
         public void ChangeColor(Vector3 color)

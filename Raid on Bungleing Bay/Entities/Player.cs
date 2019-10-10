@@ -10,7 +10,7 @@ using Panther;
 #endregion
 namespace Raid_on_Bungleing_Bay.Entities
 {
-    class Player : ModelEntity
+    public class Player : ModelEntity
     {
         #region Fields
         ModelEntity _blade;

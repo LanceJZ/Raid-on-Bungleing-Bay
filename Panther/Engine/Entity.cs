@@ -20,7 +20,7 @@ namespace Panther
         protected Vector3 _directionalLightColor;
         protected Camera _camera;
         protected Matrix _world = Matrix.Identity;
-        public Vector3 TheScale = Vector3.One;
+        public Vector3 Scale = Vector3.One;
         #endregion
         #region Properties
         public virtual Vector3 Position
@@ -54,10 +54,10 @@ namespace Panther
             get => _PO.RotationAcceleration;
             set => _PO.RotationAcceleration = value;
         }
-        public float Scale
+        public float ScaleAll
         {
-            get => (TheScale.X + TheScale.Y + TheScale.Z) / 3;
-            set => TheScale = new Vector3(value);
+            get => (Scale.X + Scale.Y + Scale.Z) / 3;
+            set => Scale = new Vector3(value);
         }
         public bool Moveable
         {

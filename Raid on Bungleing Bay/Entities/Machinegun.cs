@@ -13,9 +13,9 @@ namespace Raid_on_Bungleing_Bay.Entities
     class Machinegun : ModelEntity
     {
         #region Fields
-        GameLogic LogicRef;
+        GameLogic _logic;
         Shot _shot;
-        Player _playerRef;
+        Player _player;
         Mode _currentMode = Mode.idle;
         Timer _searchForPlayerTimer;
         Vector3 _targetPos;
@@ -26,13 +26,14 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         #endregion
         #region Constructor
-        public Machinegun(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
+        public Machinegun(Game game, Camera camera, GameLogic gameLogic, Vector3 position) : base(game, camera)
         {
-            LogicRef = gameLogic;
+            _logic = gameLogic;
+            Position = position;
             //Enabled = false;
 
             _searchForPlayerTimer = new Timer(game, 0.25f);
-            _playerRef = gameLogic._player;
+            _player = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
 
         }
@@ -42,9 +43,9 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             LoadModel("MachineGun");
 
-            PO.Position.X = -8.25f;
-            PO.Position.Y = -12.0f;
-            PO.Position.Z = 1;
+            //PO.Position.X = -8.25f;
+            //PO.Position.Y = -12.0f;
+            //PO.Position.Z = 1;
 
             base.Initialize();
         }
@@ -83,10 +84,10 @@ namespace Raid_on_Bungleing_Bay.Entities
 
             if (Helper.RandomMinMax(0, 10) > 1)
             {
-                if (Vector3.Distance(Position, _playerRef.Position) < 15) //25 works for game.
+                if (Vector3.Distance(Position, _player.Position) < 15) //25 works for game.
                 {
                     _targetOldPos = _targetPos;
-                    _targetPos = _playerRef.Position;
+                    _targetPos = _player.Position;
                     _currentMode = Mode.turn;
                     Velocity = Vector3.Zero;
                     RotationVelocity = Vector3.Zero;
