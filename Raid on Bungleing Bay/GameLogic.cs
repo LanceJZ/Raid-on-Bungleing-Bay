@@ -26,7 +26,6 @@ namespace Raid_on_Bungleing_Bay
         Camera _camera;
 
         GameState _mode = GameState.InPlay;
-        KeyboardState _oldKeyState;
         public NumberGenerator _score;
 
         public Land _land;
@@ -45,6 +44,7 @@ namespace Raid_on_Bungleing_Bay
         {
             _camera = camera;
 
+            // Ctrl+M Ctrl+L to show regions.
             // Screen resolution is 1200 X 900.
             // [Y] positive is Up.
             // [X] positive is right of window when camera is at rotation zero.

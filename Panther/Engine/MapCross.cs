@@ -19,6 +19,7 @@ namespace Panther
         Cube _top;
         Cube _bottom;
         List<Vector3> _pointsOfInterest;
+        float _camOrg;
         #endregion
         #region Properties
 
@@ -27,7 +28,7 @@ namespace Panther
         public MapCross(Game game, Camera camera) : base(game, camera)
         {
             Enabled = false;
-            _camera = camera;
+            //_camera = camera;
             _left = new Cube(game, camera);
             _right = new Cube(game, camera);
             _top = new Cube(game, camera);
@@ -39,6 +40,7 @@ namespace Panther
         public override void Initialize()
         {
             PO.Position.Z = 0.5f;
+            _camOrg = _camera.Position.Z;
 
             _left.AddAsChildOf(this);
             _right.AddAsChildOf(this);
@@ -67,7 +69,7 @@ namespace Panther
         #region Update
         public override void Update(GameTime gameTime)
         {
-            CameraRef.MoveTo(new Vector3(PO.Position.X, PO.Position.Y, CameraRef.Position.Z));
+            _camera.MoveTo(new Vector3(PO.Position.X, PO.Position.Y, _camera.Position.Z));
 
             GetInput();
 
@@ -81,11 +83,19 @@ namespace Panther
         {
             if (Helper.KeyDown(Keys.Up))
             {
-                PO.Velocity.Y = 10;
+                PO.Velocity.Y = 5;
+            }
+            else if (Helper.KeyDown(Keys.W))
+            {
+                PO.Velocity.Y = 25;
             }
             else if (Helper.KeyDown(Keys.Down))
             {
-                PO.Velocity.Y = -10;
+                PO.Velocity.Y = -5;
+            }
+            else if (Helper.KeyDown(Keys.S))
+            {
+                PO.Velocity.Y = -25;
             }
             else
             {
@@ -94,35 +104,60 @@ namespace Panther
 
             if (Helper.KeyDown(Keys.Left))
             {
-               PO.Velocity.X = -10f;
+               PO.Velocity.X = -5f;
+            }
+            else if (Helper.KeyDown(Keys.A))
+            {
+                PO.Velocity.X = -25;
             }
             else if (Helper.KeyDown(Keys.Right))
             {
-                PO.Velocity.X = 10f;
+                PO.Velocity.X = 5f;
+            }
+            else if (Helper.KeyDown(Keys.D))
+            {
+                PO.Velocity.X = 25;
             }
             else
             {
                 PO.Velocity.X = 0;
             }
 
-            if (Helper.KeyPressed(Keys.M))
+            if (Helper.KeyDown(Keys.PageUp))
             {
-                System.Diagnostics.Debug.WriteLine("Location " + Position.ToString() + " added to list.");
-                _pointsOfInterest.Add(Position);
+                _camera.MoveTo(new Vector3(_camera.X, _camera.Y, _camera.Z += 10));
             }
 
-            if (Helper.KeyPressed(Keys.S))
+            if (Helper.KeyDown(Keys.PageDown))
+            {
+                _camera.MoveTo(new Vector3(_camera.X, _camera.Y, _camera.Z -= 10));
+            }
+
+            if (Helper.KeyDown(Keys.Back))
+            {
+                _camera.MoveTo(new Vector3(_camera.X, _camera.Y, _camOrg));
+            }
+
+            if (Helper.KeyPressed(Keys.M))
+            {
+                Vector3 pos = Vector3.Zero;
+                pos.X = (int)Math.Round(Position.X);
+                pos.Y = (int)Math.Round(Position.Y);
+                pos.Z = 1;
+
+                System.Diagnostics.Debug.WriteLine("Location " + pos.ToString() + " added to list.");
+
+                _pointsOfInterest.Add(pos);
+            }
+
+            if (Helper.KeyPressed(Keys.Enter))
             {
                 string pointsOut = "";
 
                 foreach(Vector3 v in _pointsOfInterest)
                 {
-                    int x = (int)Math.Round(v.X);
-                    int y = (int)Math.Round(v.Y);
-                    int z = (int)Math.Round(v.Z);
-
-                    pointsOut += "X: " + x.ToString() + " Y: " + y.ToString() + " Z: " + z.ToString() + "\n";
-                    pointsOut += "Vector3(" + x.ToString() + ", " + y.ToString() + ", 1)\n";
+                    pointsOut += "X: " + v.X.ToString() + " Y: " + v.Y.ToString() + " Z: " + v.Z.ToString() + "\n";
+                    pointsOut += "Vector3(" + v.X.ToString() + ", " + v.Y.ToString() + ", " + v.Z.ToString() + ")\n";
                 }
 
                 File.WriteAllText("pointesOfInterest.txt", pointsOut);

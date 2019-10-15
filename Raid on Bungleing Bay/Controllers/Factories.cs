@@ -51,11 +51,37 @@ namespace Raid_on_Bungleing_Bay.Controllers
             _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-1.0f, -9.0f, 2)));
             _factories.Add(new Factory(Game, _camera, _logic, new Vector3(16.5f, -7.5f, 2)));
             _factories.Add(new Factory(Game, _camera, _logic, new Vector3(14.5f, -37.5f, 2)));
-            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-46, 183, 1)));
-            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-69, 180, 1)));
-            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-77, 182, 1)));
-            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-95, 169, 1)));
-            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-150, 170, 1)));
+            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-46, -67, 2)));
+            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-69, -70, 2)));//-250 in y for mirror. Done.
+            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-77, -68, 2)));
+            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-95, -81, 2)));
+            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-150, -80, 2)));
+
+            List<Factory> mirrorFactories = new List<Factory>();
+            //Y mirror.
+            foreach(Factory factory in _factories) //Going to need code to connect mirrors so when destroyed, boom.
+            {
+                if (factory.Y > 80)
+                {
+                    mirrorFactories.Add(new Factory(Game, _camera, _logic, new Vector3(factory.X, factory.Y - 250, factory.Z)));
+                }
+
+
+                if (factory.Y < -80)
+                {
+                    mirrorFactories.Add(new Factory(Game, _camera, _logic, new Vector3(factory.X, factory.Y + 250, factory.Z)));
+                }
+
+                if (factory.X > 26)
+                {
+                    mirrorFactories.Add(new Factory(Game, _camera, _logic, new Vector3(factory.X - 400, factory.Y, factory.Z)));
+                }
+
+                if (factory.X < -26)
+                {
+                    //mirrorFactories.Add(new Factory(Game, _camera, _logic, new Vector3(factory.X + 400, factory.Y, factory.Z)));
+                }
+            }
 
             base.Initialize();
         }

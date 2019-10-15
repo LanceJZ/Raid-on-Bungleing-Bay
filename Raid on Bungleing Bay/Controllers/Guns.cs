@@ -49,15 +49,22 @@ namespace Raid_on_Bungleing_Bay.Controllers
             _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(34, 62, 1)));
             _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(-51, 14, 1)));
             _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(-72, 5, 1)));
-            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(12, 145, 1)));
-            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(-20, 144, 1)));
-            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(-51, 194, 1)));
-            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(-79, 195, 1)));
-            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(103, 183, 1)));
-            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(129, 171, 1)));
-            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(94, 157, 1)));
-            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(86, 178, 1)));
-            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(58, 185, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(12, -105, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(-20, -104, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(-51, -56, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(-79, -57, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(94, -93, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(137, 65, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(137, 91, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(158, 74, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(191, 67, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(127, -8, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(131, 12, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(149, -54, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(134, -66, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(98, -87, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(113, -117, 1)));
+            _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(142, -95, 1)));
 
             base.Initialize();
         }

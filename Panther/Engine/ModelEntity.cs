@@ -25,7 +25,7 @@ namespace Panther
         public float Alpha = 1;
         #endregion
         #region Properties
-        public Camera CameraRef { get => _camera; }
+        public Camera _camera { get => base._camera; }
 
         public Vector3 WorldPosition
         {
@@ -206,7 +206,7 @@ namespace Panther
             if (_model == null)
                 return;
 
-            if (_camera == null)
+            if (base._camera == null)
             {
                 System.Diagnostics.Debug.WriteLine("The Camera is not setup (null) on the class. " + this);
                 return;
@@ -225,8 +225,8 @@ namespace Panther
                 foreach (BasicEffect basicEffect in mesh.Effects)
                 {
                     basicEffect.World = _boneTransforms[mesh.ParentBone.Index];
-                    basicEffect.View = _camera.View;
-                    basicEffect.Projection = _camera.Projection;
+                    basicEffect.View = base._camera.View;
+                    basicEffect.Projection = base._camera.Projection;
                     basicEffect.DiffuseColor = _diffuseColor;
                     basicEffect.EmissiveColor = EmissiveColor;
                     basicEffect.Alpha = Alpha;

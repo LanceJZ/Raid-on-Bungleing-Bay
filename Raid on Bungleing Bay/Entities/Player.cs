@@ -60,7 +60,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         public override void Update(GameTime gameTime)
         {
             GetInput();
-            CameraRef.MoveTo(new Vector3(PO.Position.X, PO.Position.Y, CameraRef.Position.Z));
+            _camera.MoveTo(new Vector3(PO.Position.X, PO.Position.Y, _camera.Position.Z));
 
             _blade.PO.RotationVelocity.Z = 12 - RotationVelocity.Z;
             PO.CheckEdgeOfMap();
