@@ -66,6 +66,33 @@ namespace Raid_on_Bungleing_Bay.Controllers
             _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(113, -117, 1)));
             _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(142, -95, 1)));
 
+            List<Machinegun> mirrorGuns = new List<Machinegun>();
+            //Mirrors.
+            foreach (Machinegun gun in _guns)
+            {
+                if (gun.Y > 80)
+                {
+                    mirrorGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X, gun.Y - 250, gun.Z), gun));
+                }
+
+
+                if (gun.Y < -80)
+                {
+                    mirrorGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X, gun.Y + 250, gun.Z), gun));
+                }
+
+                if (gun.X > 126)
+                {
+                    mirrorGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X - 400, gun.Y, gun.Z), gun));
+                }
+
+                if (gun.X < -126)
+                {
+                    mirrorGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X + 400, gun.Y, gun.Z), gun));
+                }
+            }
+
+
             base.Initialize();
         }
         #endregion

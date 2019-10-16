@@ -235,6 +235,9 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void FireShot()
         {
+            if (!_shot.Enabled)
+                return;
+
             _shot.Fire(Position, Helper.VelocityFromAngleZ(PO.Rotation.Z, 10));
             _searchForPlayerTimer.Reset();
             _currentMode = Mode.idle;

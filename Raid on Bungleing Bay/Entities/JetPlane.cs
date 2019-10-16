@@ -17,6 +17,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         Shot _shot;
         Player _playerRef;
         Land _landRef;
+        JetPlane _mirror;
         Mode _currentMode = Mode.idle;
         Timer _searchForPlayerTimer;
         Timer _changeCourseTimer;
@@ -29,7 +30,7 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         #endregion
         #region Constructor
-        public JetPlane(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
+        public JetPlane(Game game, Camera camera, GameLogic gameLogic, JetPlane mirror = null) : base(game, camera)
         {
             _logicRef = gameLogic;
             _landRef = gameLogic._land;
@@ -37,6 +38,9 @@ namespace Raid_on_Bungleing_Bay.Entities
             _shot = new Shot(game, camera, gameLogic);
             _searchForPlayerTimer = new Timer(game, 1);
             _changeCourseTimer = new Timer(game, 5);
+
+            if (mirror != null)
+                _mirror = mirror;
 
             //Enabled = false;
         }
@@ -79,6 +83,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
 
             PO.CheckEdgeOfMap();
+            Mirror();
 
             base.Update(gameTime);
         }
@@ -86,6 +91,21 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Public methods
         #endregion
         #region Private/Protected methods
+        void Mirror()
+        {
+            if (Y > 86)
+            {
+
+            }
+            else if (Y < -86)
+            {
+
+            }
+            else if (X > 100)
+            {
+
+            }
+        }
 
         void Idle()
         {
@@ -175,6 +195,9 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void FireShot()
         {
+            if (!_shot.Enabled)
+                return;
+
             _shot.Fire(Position, Helper.VelocityFromAngleZ(PO.Rotation.Z, 20));
             _searchForPlayerTimer.Reset();
             _currentMode = Mode.idle;

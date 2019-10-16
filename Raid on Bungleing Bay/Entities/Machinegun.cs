@@ -16,6 +16,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         GameLogic _logic;
         Shot _shot;
         Player _player;
+        Machinegun _mirror;
         Mode _currentMode = Mode.idle;
         Timer _searchForPlayerTimer;
         Vector3 _targetPos;
@@ -26,7 +27,7 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         #endregion
         #region Constructor
-        public Machinegun(Game game, Camera camera, GameLogic gameLogic, Vector3 position) : base(game, camera)
+        public Machinegun(Game game, Camera camera, GameLogic gameLogic, Vector3 position, Machinegun mirror = null) : base(game, camera)
         {
             _logic = gameLogic;
             Position = position;
@@ -36,16 +37,14 @@ namespace Raid_on_Bungleing_Bay.Entities
             _player = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
 
+            if (mirror != null)
+                _mirror = mirror;
         }
         #endregion
         #region Initialize
         public override void Initialize()
         {
             LoadModel("MachineGun");
-
-            //PO.Position.X = -8.25f;
-            //PO.Position.Y = -12.0f;
-            //PO.Position.Z = 1;
 
             base.Initialize();
         }
@@ -142,6 +141,9 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void FireShot()
         {
+            if (!_shot.Enabled)
+                return;
+
             _shot.Fire(Position, Helper.VelocityFromAngleZ(PO.Rotation.Z, 10));
             _searchForPlayerTimer.Reset();
             _currentMode = Mode.idle;
