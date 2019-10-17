@@ -204,5 +204,33 @@ namespace Raid_on_Bungleing_Bay.Entities
             base.Update(gameTime);
         }
         #endregion
+        #region Public Methods
+        public void ToggleMirror(bool visable)
+        {
+            topMidBottomSide.Visible = visable;
+            topRighbottomSide.Visible = visable;
+            topLeftBottomSide.Visible = visable;
+            topRightEdgeBottomSide.Visible = visable;
+
+            bottomRightTopSide.Visible = visable;
+            bottomRightEdgTopSide.Visible = visable;
+            bottomMidTopSide.Visible = visable;
+            bottomLeftTopSide.Visible = visable;
+
+            topLeftRightSide.Visible = visable;
+            bottomLeftRightSide.Visible = visable;
+            topRightEdgeLeftSide.Visible = visable;
+            bottomRightEdgeLeftSide.Visible = visable;
+            topRightLeftSide.Visible = visable;
+            bottomRightLeftSide.Visible = visable;
+
+            topLeftBottomRight.Visible = visable;
+            bottomLeftTopRight.Visible = visable;
+            topRightEdgeBottomLeft.Visible = visable;
+            topRightBottomLeft.Visible = visable;
+            bottomRightEdgeTopLeft.Visible = visable;
+            bottomRightTopLeft.Visible = visable;
+        }
+        #endregion
     }
 }

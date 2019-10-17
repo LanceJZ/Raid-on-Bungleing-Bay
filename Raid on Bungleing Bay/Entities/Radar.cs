@@ -13,18 +13,22 @@ namespace Raid_on_Bungleing_Bay.Entities
     class Radar : ModelEntity
     {
         #region Fields
-        GameLogic LogicRef;
+        GameLogic _logic;
+        Radar _mirror;
 
         #endregion
         #region Properties
 
         #endregion
         #region Constructor
-        public Radar(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
+        public Radar(Game game, Camera camera, GameLogic gameLogic, Vector3 position, Radar mirror = null) : base(game, camera)
         {
-            LogicRef = gameLogic;
+            _logic = gameLogic;
+            Position = position;
             //Enabled = false;
 
+            if (mirror != null)
+                _mirror = mirror;
         }
         #endregion
         #region Initialize
@@ -32,7 +36,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             base.Initialize();
 
-            Position = new Vector3(13, -22f, 1);
+            //Position = new Vector3(13, -22f, 1);
             PO.RotationVelocity.Z = 1;
 
             LoadModel("Radar");

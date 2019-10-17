@@ -32,7 +32,7 @@ namespace Raid_on_Bungleing_Bay
         Factories _factories;
         Tank TheTank;
         Guns _guns;
-        Radar TheRadar;
+        Radars _radars;
         JetPlane TheJet;
         public Player _player;
         bool _devMode = true;
@@ -57,8 +57,9 @@ namespace Raid_on_Bungleing_Bay
             _player = new Player(game, camera, this);
             _factories = new Factories(game, camera, this);
             _guns = new Guns(game, camera, this);
+            _radars = new Radars(game, camera, this);
+
             TheTank = new Tank(game, camera, this);
-            TheRadar = new Radar(game, camera, this);
             TheJet = new JetPlane(game, camera, this);
 
             _mapCross = new MapCross(game, camera);
@@ -93,6 +94,7 @@ namespace Raid_on_Bungleing_Bay
             {
                 _player.Enabled = !_player.Enabled;
                 _mapCross.Enabled = !_mapCross.Enabled;
+                _land.ToggleMirror(_player.Enabled);
             }
 
             Helper.EndKeyPressed();
