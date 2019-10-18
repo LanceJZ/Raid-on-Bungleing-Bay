@@ -30,7 +30,7 @@ namespace Raid_on_Bungleing_Bay
 
         public Land _land;
         Factories _factories;
-        Tank TheTank;
+        Tanks _tanks;
         Guns _guns;
         Radars _radars;
         JetPlane TheJet;
@@ -44,7 +44,7 @@ namespace Raid_on_Bungleing_Bay
         {
             _camera = camera;
 
-            // Ctrl+M Ctrl+L to show regions.
+            // Ctrl+M, Ctrl+L to show regions.
             // Screen resolution is 1200 X 900.
             // [Y] positive is Up.
             // [X] positive is right of window when camera is at rotation zero.
@@ -58,8 +58,7 @@ namespace Raid_on_Bungleing_Bay
             _factories = new Factories(game, camera, this);
             _guns = new Guns(game, camera, this);
             _radars = new Radars(game, camera, this);
-
-            TheTank = new Tank(game, camera, this);
+            _tanks = new Tanks(game, camera, this);
             TheJet = new JetPlane(game, camera, this);
 
             _mapCross = new MapCross(game, camera);

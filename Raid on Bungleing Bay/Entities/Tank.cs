@@ -31,6 +31,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         GameLogic _logicRef;
         Shot _shot;
         Player _playerRef;
+        Tank _mirror;
         Mode _currentMode = Mode.idle;
         Heading _currentHeading = Heading.toEnd;
         Timer _searchForPlayerTimer;
@@ -43,25 +44,32 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         #endregion
         #region Constructor
-        public Tank(Game game, Camera camera, GameLogic gameLogic) : base(game, camera)
+        public Tank(Game game, Camera camera, GameLogic gameLogic, Vector3 startPosition, Vector3 endPosition,
+            Tank mirror = null) : base(game, camera)
         {
             Enabled = true;
             _logicRef = gameLogic;
             _playerRef = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
             _searchForPlayerTimer = new Timer(game, 1);
+            Position = startPosition;
+            _patrolStart = startPosition;
+            _patrolEnd = endPosition;
+
+            if (mirror != null)
+                _mirror = mirror;
         }
         #endregion
         #region Initialize
         public override void Initialize()
         {
-            PO.Position.X = 28;
-            PO.Position.Y = -38;
-            PO.Position.Z = 1;
-            PO.Rotation.Z = MathHelper.Pi / 2;
-            _patrolStart = Position;
-            _patrolEnd = Position;
-            _patrolEnd.Y = PO.Position.Y + 22;
+            //:X = 28;
+            //Y = -38;
+            //Z = 1;
+            //Z = MathHelper.Pi / 2;
+            //_patrolStart = Position;
+            //_patrolEnd = Position;
+            //_patrolEnd.Y = Y + 22;
 
             base.Initialize();
 
@@ -100,7 +108,8 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void MoveTankToStart()
         {
-            if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.25f || PO.Rotation.Z < (MathHelper.Pi + MathHelper.Pi / 2) - 0.25f)
+            if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.25f ||
+                PO.Rotation.Z < (MathHelper.Pi + MathHelper.Pi / 2) - 0.25f)
             {
                 PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolStart, Rotation.Z, 0.25f);
             }
@@ -109,15 +118,29 @@ namespace Raid_on_Bungleing_Bay.Entities
                 PO.RotationVelocity.Z = 0;
                 PO.Rotation.Z = MathHelper.Pi + MathHelper.Pi / 2;
 
-
-                if (Position.Y < _patrolStart.Y)
+                if ((int)_patrolStart.X == (int)_patrolEnd.X)
                 {
-                    PO.Velocity.Y = 0;
-                    _currentHeading = Heading.toEnd;
+                    if (Y < _patrolStart.Y)
+                    {
+                        PO.Velocity.Y = 0;
+                        _currentHeading = Heading.toEnd;
+                    }
+                    else
+                    {
+                        PO.Velocity.Y = -2.5f;
+                    }
                 }
                 else
                 {
-                    PO.Velocity.Y = -2.5f;
+                    if (X < _patrolStart.X)
+                    {
+                        PO.Velocity.X = 0;
+                        _currentHeading = Heading.toEnd;
+                    }
+                    else
+                    {
+                        PO.Velocity.X = -2.5f;
+                    }
                 }
             }
         }
@@ -133,14 +156,29 @@ namespace Raid_on_Bungleing_Bay.Entities
                 PO.RotationVelocity.Z = 0;
                 PO.Rotation.Z = MathHelper.Pi / 2;
 
-                if (Position.Y > _patrolEnd.Y)
+                if ((int)_patrolStart.X == (int)_patrolEnd.X)
                 {
-                    PO.Velocity.Y = 0;
-                    _currentHeading = Heading.toStart;
+                    if (Y > _patrolEnd.Y)
+                    {
+                        PO.Velocity.Y = 0;
+                        _currentHeading = Heading.toStart;
+                    }
+                    else
+                    {
+                        PO.Velocity.Y = 2.5f;
+                    }
                 }
                 else
                 {
-                    PO.Velocity.Y = 2.5f;
+                    if (X > _patrolEnd.X)
+                    {
+                        PO.Velocity.X = 0;
+                        _currentHeading = Heading.toStart;
+                    }
+                    else
+                    {
+                        PO.Velocity.X = 2.5f;
+                    }
                 }
             }
         }

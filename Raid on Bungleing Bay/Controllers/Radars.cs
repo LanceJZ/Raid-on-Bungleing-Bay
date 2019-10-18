@@ -30,7 +30,7 @@ namespace Raid_on_Bungleing_Bay.Controllers
             game.Components.Add(this);
         }
         #endregion
-        #region Initialize-Load-BeginRun
+        #region Initialize
         public override void Initialize()
         {
             _radars.Add(new Radar(Game, _camera, _logic, new Vector3(17, -19, 1)));
@@ -79,6 +79,10 @@ namespace Raid_on_Bungleing_Bay.Controllers
 
             base.Update(gameTime);
         }
+        #endregion
+        #region Public Methods
+        #endregion
+        #region Private/Protected Methods
         #endregion
     }
 }

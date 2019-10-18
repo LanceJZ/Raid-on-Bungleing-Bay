@@ -52,6 +52,7 @@
     <Compile Include="Controllers\Radars.cs" />
     <Compile Include="Controllers\Guns.cs" />
     <Compile Include="Controllers\Factories.cs" />
+    <Compile Include="Controllers\Tanks.cs" />
     <Compile Include="Entities\JetPlane.cs" />
     <Compile Include="Entities\Machinegun.cs" />
     <Compile Include="Entities\Radar.cs" />
