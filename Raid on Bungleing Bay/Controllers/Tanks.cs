@@ -15,6 +15,7 @@ namespace Raid_on_Bungleing_Bay.Controllers
         #region Fields
         GameLogic _logic;
         Camera _camera;
+        Player _player;
         List<Tank> _tanks;
         #endregion
         #region Properties
@@ -24,6 +25,7 @@ namespace Raid_on_Bungleing_Bay.Controllers
         public Tanks(Game game, Camera camera, GameLogic gameLogic) : base(game)
         {
             _logic = gameLogic;
+            _player = gameLogic._player;
             _camera = camera;
             _tanks = new List<Tank>();
 
@@ -33,7 +35,19 @@ namespace Raid_on_Bungleing_Bay.Controllers
         #region Initialize
         public override void Initialize()
         {
+            List<Vector3> pat1 = new List<Vector3>();
+            List<Vector3> pat2 = new List<Vector3>();
+            List<Vector3> pat3 = new List<Vector3>();
 
+            pat1.Add(new Vector3(29, -12, 1));
+            pat1.Add(new Vector3(29, -40, 1));
+            pat2.Add(new Vector3(-18, -3, 1));
+            pat2.Add(new Vector3(15, -3, 1));
+
+            _tanks.Add(new Tank(Game, _camera, _logic, pat1));
+            _tanks.Add(new Tank(Game, _camera, _logic, pat2));
+            //_tanks.Add(new Tank(Game, _camera, _logic, new Vector3(-10, -12, 1), new Vector3(-30, -12, 1)));
+            //_tanks.Add(new Tank(Game, _camera, _logic, ));
             base.Initialize();
         }
         #endregion

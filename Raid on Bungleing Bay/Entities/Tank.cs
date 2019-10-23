@@ -39,12 +39,14 @@ namespace Raid_on_Bungleing_Bay.Entities
         Vector3 _targetOldPos;
         Vector3 _patrolStart;
         Vector3 _patrolEnd;
+        List<Vector3> _patrolRoute;
+        int _patrolNextWayPoint = 1;
         #endregion
         #region Properties
 
         #endregion
         #region Constructor
-        public Tank(Game game, Camera camera, GameLogic gameLogic, Vector3 startPosition, Vector3 endPosition,
+        public Tank(Game game, Camera camera, GameLogic gameLogic, List<Vector3> route,
             Tank mirror = null) : base(game, camera)
         {
             Enabled = true;
@@ -52,9 +54,8 @@ namespace Raid_on_Bungleing_Bay.Entities
             _playerRef = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
             _searchForPlayerTimer = new Timer(game, 1);
-            Position = startPosition;
-            _patrolStart = startPosition;
-            _patrolEnd = endPosition;
+            Position = route[0];
+            _patrolRoute = route;
 
             if (mirror != null)
                 _mirror = mirror;
@@ -63,14 +64,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Initialize
         public override void Initialize()
         {
-            //:X = 28;
-            //Y = -38;
-            //Z = 1;
-            //Z = MathHelper.Pi / 2;
-            //_patrolStart = Position;
-            //_patrolEnd = Position;
-            //_patrolEnd.Y = Y + 22;
-
             base.Initialize();
 
             LoadModel("Tank");
@@ -101,11 +94,109 @@ namespace Raid_on_Bungleing_Bay.Entities
                     break;
             }
 
-
             base.Update(gameTime);
         }
         #endregion
 
+        void Move()
+        {
+            if (1 > Vector3.Distance(Position, _patrolRoute[_patrolNextWayPoint]))
+            {
+                if (_patrolNextWayPoint + 1 > _patrolRoute.Count - 1)
+                {
+                    _patrolNextWayPoint = 0;
+                }
+                else
+                {
+                    _patrolNextWayPoint++;
+                }
+            }
+
+            float angle = Helper.AngleFromVectorsZ(Position, _patrolRoute[_patrolNextWayPoint]);
+            PO.Rotation.Z = angle;
+            Velocity = Helper.VelocityFromAngleZ(angle, 2.5f);
+
+            if (_searchForPlayerTimer.Elapsed)
+            {
+                SearchForPlayer();
+            }
+        }
+
+        void Idle()
+        {
+            Velocity = Vector3.Zero;
+
+            if (_searchForPlayerTimer.Elapsed)
+                _currentMode = Mode.search;
+        }
+
+        void SearchForPlayer() //Do this on move too.
+        {
+            _searchForPlayerTimer.Reset();
+
+            if (Helper.RandomMinMax(0, 10) > 1)
+            {
+                if (Vector3.Distance(Position, _playerRef.Position) < 15) //25 works for game.
+                {
+                    _targetOldPos = _targetPos;
+                    _targetPos = _playerRef.Position;
+                    _currentMode = Mode.turn;
+                    Velocity = Vector3.Zero;
+                    RotationVelocity = Vector3.Zero;
+                }
+                else
+                {
+                    _currentMode = Mode.move;
+                }
+            }
+        }
+
+        void TurnTowardsPlayer()
+        {
+            PO.RotationAcceleration.Z = Helper.AimAtTargetZ(Position, _targetPos, Rotation.Z, 0.15f);
+
+            if (PO.RotationVelocity.Z > 0.25f)
+            {
+                PO.RotationVelocity.Z = 0.25f;
+                PO.RotationAcceleration.Z = 0;
+            }
+
+            if (PO.RotationVelocity.Z < -0.25f)
+            {
+                PO.RotationVelocity.Z = -0.25f;
+                PO.RotationAcceleration.Z = 0;
+            }
+
+            float tAngle = Rotation.Z;
+            float pAngle = Helper.AngleFromVectorsZ(Position, _targetPos);
+            float aDiffernce = 0;
+
+            if (tAngle < pAngle)
+            {
+                aDiffernce = pAngle - tAngle;
+            }
+            else
+            {
+                aDiffernce = tAngle - pAngle;
+            }
+
+            if (aDiffernce < 0.05f)
+            {
+                PO.RotationVelocity.Z = 0;
+                PO.RotationAcceleration.Z = 0;
+                _currentMode = Mode.fire;
+            }
+        }
+
+        void FireShot()
+        {
+            if (_shot.Enabled)
+                return;
+
+            _shot.Fire(Position, Helper.VelocityFromAngleZ(PO.Rotation.Z, 10));
+            _searchForPlayerTimer.Reset();
+            _currentMode = Mode.idle;
+        }
         void MoveTankToStart()
         {
             if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.25f ||
@@ -145,140 +236,56 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
         }
 
-        void MoveTankToEnd()
+        void MoveTankToEnd() //Tanks not moving.
         {
-            if (PO.Rotation.Z > (MathHelper.Pi / 2) + 0.25f || PO.Rotation.Z < (MathHelper.Pi / 2) - 0.25f)
+            if ((int)_patrolStart.X == (int)_patrolEnd.X)
             {
-                PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
-            }
-            else
-            {
-                PO.RotationVelocity.Z = 0;
-                PO.Rotation.Z = MathHelper.Pi / 2;
-
-                if ((int)_patrolStart.X == (int)_patrolEnd.X)
+                if (PO.Rotation.Z > (MathHelper.Pi / 2) + 0.25f || PO.Rotation.Z < (MathHelper.Pi / 2) - 0.25f)
                 {
-                    if (Y > _patrolEnd.Y)
-                    {
-                        PO.Velocity.Y = 0;
-                        _currentHeading = Heading.toStart;
-                    }
-                    else
-                    {
-                        PO.Velocity.Y = 2.5f;
-                    }
+                    PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
                 }
                 else
                 {
-                    if (X > _patrolEnd.X)
+                    PO.RotationVelocity.Z = 0;
+                    PO.Rotation.Z = MathHelper.Pi / 2;
+
+                    if ((int)_patrolStart.X == (int)_patrolEnd.X)
                     {
-                        PO.Velocity.X = 0;
-                        _currentHeading = Heading.toStart;
+                        if (Y > _patrolEnd.Y)
+                        {
+                            PO.Velocity.Y = 0;
+                            _currentHeading = Heading.toStart;
+                        }
+                        else
+                        {
+                            PO.Velocity.Y = 2.5f;
+                        }
                     }
                     else
                     {
-                        PO.Velocity.X = 2.5f;
+                        if (PO.Rotation.Z > 0 + 0.25f || PO.Rotation.Z < (MathHelper.TwoPi) - 0.25f)
+                        {
+                            PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
+                        }
+                        else
+                        {
+                            PO.RotationVelocity.Z = 0;
+                            PO.Rotation.Z = 0;
+
+                            if (X > _patrolEnd.X)
+                            {
+                                PO.Velocity.X = 0;
+                                _currentHeading = Heading.toStart;
+                            }
+                            else
+                            {
+                                PO.Velocity.X = 2.5f;
+                            }
+                        }
                     }
                 }
             }
         }
 
-        void Move()
-        {
-            switch (_currentHeading)
-            {
-                case Heading.toEnd:
-                    MoveTankToEnd();
-                    break;
-                case Heading.toStart:
-                    MoveTankToStart();
-                    break;
-            }
-
-            if (_searchForPlayerTimer.Elapsed)
-            {
-                SearchForPlayer();
-            }
-        }
-
-        void Idle()
-        {
-            Velocity = Vector3.Zero;
-
-            if (_searchForPlayerTimer.Elapsed)
-                _currentMode = Mode.search;
-        }
-
-        void SearchForPlayer() //Do this on move too.
-        {
-            _searchForPlayerTimer.Reset();
-
-            if (Helper.RandomMinMax(0, 10) > 1)
-            {
-                if (Vector3.Distance(Position, _playerRef.Position) < 15) //25 works for game.
-                {
-                    _targetOldPos = _targetPos;
-                    _targetPos = _playerRef.Position;
-                    _currentMode = Mode.turn;
-                    Velocity = Vector3.Zero;
-                    RotationVelocity = Vector3.Zero;
-                }
-                else
-                {
-                    _currentMode = Mode.move;
-                }
-            }
-            else
-            {
-                _currentMode = Mode.idle;
-            }
-        }
-
-        void TurnTowardsPlayer()
-        {
-            PO.RotationAcceleration.Z = Helper.AimAtTargetZ(Position, _targetPos, Rotation.Z, 0.15f);
-
-            if (PO.RotationVelocity.Z > 0.25f)
-            {
-                PO.RotationVelocity.Z = 0.25f;
-                PO.RotationAcceleration.Z = 0;
-            }
-
-            if (PO.RotationVelocity.Z < -0.25f)
-            {
-                PO.RotationVelocity.Z = -0.25f;
-                PO.RotationAcceleration.Z = 0;
-            }
-
-            float tAngle = Rotation.Z;
-            float pAngle = Helper.AngleFromVectorsZ(Position, _targetPos);
-            float aDiffernce = 0;
-
-            if (tAngle < pAngle)
-            {
-                aDiffernce = pAngle - tAngle;
-            }
-            else
-            {
-                aDiffernce = tAngle - pAngle;
-            }
-
-            if (aDiffernce < 0.25f)
-            {
-                PO.RotationVelocity.Z = 0;
-                PO.RotationAcceleration.Z = 0;
-                _currentMode = Mode.fire;
-            }
-        }
-
-        void FireShot()
-        {
-            if (!_shot.Enabled)
-                return;
-
-            _shot.Fire(Position, Helper.VelocityFromAngleZ(PO.Rotation.Z, 10));
-            _searchForPlayerTimer.Reset();
-            _currentMode = Mode.idle;
-        }
     }
 }
