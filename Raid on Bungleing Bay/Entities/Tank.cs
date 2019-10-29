@@ -41,6 +41,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         Vector3 _patrolEnd;
         List<Vector3> _patrolRoute;
         int _patrolNextWayPoint = 1;
+        int _patrolPoint = 1;
         #endregion
         #region Properties
 
@@ -100,16 +101,19 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void Move()
         {
-            if (1 > Vector3.Distance(Position, _patrolRoute[_patrolNextWayPoint]))
+            if (0.25f > Vector3.Distance(Position, _patrolRoute[_patrolNextWayPoint]))
             {
+
                 if (_patrolNextWayPoint + 1 > _patrolRoute.Count - 1)
                 {
-                    _patrolNextWayPoint = 0;
+                    _patrolPoint = -1;
                 }
-                else
+                else if (_patrolNextWayPoint < 1)
                 {
-                    _patrolNextWayPoint++;
+                    _patrolPoint = 1;
                 }
+
+                _patrolNextWayPoint += _patrolPoint;
             }
 
             float angle = Helper.AngleFromVectorsZ(Position, _patrolRoute[_patrolNextWayPoint]);
