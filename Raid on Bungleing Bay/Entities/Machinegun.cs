@@ -21,7 +21,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         Timer _searchForPlayerTimer;
         Vector3 _targetPos;
         Vector3 _targetOldPos;
-
         #endregion
         #region Properties
 
@@ -31,6 +30,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             _logic = gameLogic;
             Position = position;
+            PO.Rotation.Z = Helper.RandomRadian();
             //Enabled = false;
 
             _searchForPlayerTimer = new Timer(game, 0.25f);
