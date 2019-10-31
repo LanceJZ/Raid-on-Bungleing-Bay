@@ -41,7 +41,7 @@ namespace Raid_on_Bungleing_Bay.Controllers
         {
             List<Waypoint> tankWaypoints = new List<Waypoint>();
 
-            for(int i = 0; i < 15; i++)
+            for(int i = 0; i < 21; i++)
             {
                 tankWaypoints.Add(new Waypoint());
             }
@@ -133,15 +133,77 @@ namespace Raid_on_Bungleing_Bay.Controllers
             tankWaypoints[14].points.Add(new Vector3(142, 96, 1));
             tankWaypoints[14].points.Add(new Vector3(126, 95, 1));
             tankWaypoints[14].points.Add(new Vector3(126, 87, 1));
-            tankWaypoints[14].points.Add(new Vector3(126, 90, 1)); //Needs work.
-            tankWaypoints[14].points.Add(new Vector3(136, 90, 1));
+            tankWaypoints[14].points.Add(new Vector3(134, 89, 1));
+            tankWaypoints[14].points.Add(new Vector3(136, 88, 1));
             tankWaypoints[14].points.Add(new Vector3(141, 87, 1));
             tankWaypoints[14].points.Add(new Vector3(144, 90, 1));
             tankWaypoints[14].points.Add(new Vector3(163, 90, 1));
             tankWaypoints[14].points.Add(new Vector3(156, 90, 1));
             tankWaypoints[14].points.Add(new Vector3(156, 77, 1));
+            tankWaypoints[15].points.Add(new Vector3(7, 70, 1));
+            tankWaypoints[15].points.Add(new Vector3(18, 70, 1));
+            tankWaypoints[15].points.Add(new Vector3(28, 64, 1));
+            tankWaypoints[15].points.Add(new Vector3(28, 59, 1));
+            tankWaypoints[15].points.Add(new Vector3(23, 59, 1));
+            tankWaypoints[15].points.Add(new Vector3(19, 57, 1));
+            tankWaypoints[15].points.Add(new Vector3(16, 56, 1));
+            tankWaypoints[15].points.Add(new Vector3(2, 54, 1));
+            tankWaypoints[15].points.Add(new Vector3(-5, 54, 1));
+            tankWaypoints[15].points.Add(new Vector3(-5, 58, 1));
+            tankWaypoints[15].points.Add(new Vector3(-7, 58, 1));
+            tankWaypoints[15].points.Add(new Vector3(-7, 64, 1));
+            tankWaypoints[15].points.Add(new Vector3(-13, 68, 1));
+            tankWaypoints[15].points.Add(new Vector3(-13, 71, 1));
+            tankWaypoints[16].points.Add(new Vector3(-30, 67, 1));
+            tankWaypoints[16].points.Add(new Vector3(-36, 67, 1));
+            tankWaypoints[16].points.Add(new Vector3(-36, 58, 1));
+            tankWaypoints[16].points.Add(new Vector3(-14, 58, 1));
+            tankWaypoints[16].points.Add(new Vector3(-14, 54, 1));
+            tankWaypoints[16].points.Add(new Vector3(-53, 54, 1));
+            tankWaypoints[16].points.Add(new Vector3(-53, 58, 1));
+            tankWaypoints[16].points.Add(new Vector3(-35, 58, 1));
+            tankWaypoints[16].points.Add(new Vector3(-35, 53, 1));
+            tankWaypoints[17].points.Add(new Vector3(-55, 48, 1));
+            tankWaypoints[17].points.Add(new Vector3(-23, 48, 1));
+            tankWaypoints[17].points.Add(new Vector3(-15, 45, 1));
+            tankWaypoints[17].points.Add(new Vector3(-15, 39, 1));
+            tankWaypoints[17].points.Add(new Vector3(-8, 39, 1));
+            tankWaypoints[17].points.Add(new Vector3(-12, 35, 1));
+            tankWaypoints[17].points.Add(new Vector3(-15, 35, 1));
+            tankWaypoints[17].points.Add(new Vector3(-15, 32, 1));
+            tankWaypoints[17].points.Add(new Vector3(-14, 39, 1));
+            tankWaypoints[17].points.Add(new Vector3(-28, 39, 1));
+            tankWaypoints[17].points.Add(new Vector3(-28, 36, 1));
+            tankWaypoints[17].points.Add(new Vector3(-36, 36, 1));
+            tankWaypoints[17].points.Add(new Vector3(-36, 49, 1));
+            tankWaypoints[17].points.Add(new Vector3(-23, 49, 1));
+            tankWaypoints[17].points.Add(new Vector3(-15, 46, 1));
+            tankWaypoints[17].points.Add(new Vector3(-15, 44, 1));
+            tankWaypoints[17].points.Add(new Vector3(-19, 44, 1));
+            tankWaypoints[18].points.Add(new Vector3(-49, 31, 1));
+            tankWaypoints[18].points.Add(new Vector3(-69, 31, 1));
+            tankWaypoints[18].points.Add(new Vector3(-69, 23, 1));
+            tankWaypoints[18].points.Add(new Vector3(-56, 23, 1));
+            tankWaypoints[18].points.Add(new Vector3(-72, 12, 1));
+            tankWaypoints[18].points.Add(new Vector3(-78, 12, 1));
+            tankWaypoints[19].points.Add(new Vector3(-78, 8, 1));
+            tankWaypoints[19].points.Add(new Vector3(-81, 8, 1));
+            tankWaypoints[19].points.Add(new Vector3(-82, 8, 1));
+            tankWaypoints[19].points.Add(new Vector3(-82, 33, 1));
+            tankWaypoints[19].points.Add(new Vector3(-86, 33, 1));
+            tankWaypoints[19].points.Add(new Vector3(-86, 20, 1));
+            tankWaypoints[19].points.Add(new Vector3(-98, 13, 1));
+            tankWaypoints[19].points.Add(new Vector3(-92, 9, 1));
+            tankWaypoints[19].points.Add(new Vector3(-85, 9, 1));
+            tankWaypoints[19].points.Add(new Vector3(-84, 11, 1));
+            tankWaypoints[20].points.Add(new Vector3(-102, 15, 1));
+            tankWaypoints[20].points.Add(new Vector3(-116, 22, 1));
+            tankWaypoints[20].points.Add(new Vector3(-116, 32, 1));
+            tankWaypoints[20].points.Add(new Vector3(-114, 32, 1));
+            tankWaypoints[20].points.Add(new Vector3(-98, 39, 1));
+            tankWaypoints[20].points.Add(new Vector3(-90, 34, 1));
 
-            //tankWaypoints[14].points.Add(new );
+            //tankWaypoints[20].points.Add(new );
 
             for (int i = 0; i < tankWaypoints.Count; i++)
             {
