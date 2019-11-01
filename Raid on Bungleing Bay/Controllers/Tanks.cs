@@ -41,7 +41,7 @@ namespace Raid_on_Bungleing_Bay.Controllers
         {
             List<Waypoint> tankWaypoints = new List<Waypoint>();
 
-            for(int i = 0; i < 21; i++)
+            for(int i = 0; i < 22; i++)
             {
                 tankWaypoints.Add(new Waypoint());
             }
@@ -202,8 +202,22 @@ namespace Raid_on_Bungleing_Bay.Controllers
             tankWaypoints[20].points.Add(new Vector3(-114, 32, 1));
             tankWaypoints[20].points.Add(new Vector3(-98, 39, 1));
             tankWaypoints[20].points.Add(new Vector3(-90, 34, 1));
+            tankWaypoints[21].points.Add(new Vector3(-86, -83, 1));
+            tankWaypoints[21].points.Add(new Vector3(-86, -83, 1));
+            tankWaypoints[21].points.Add(new Vector3(-90, -84, 1));
+            tankWaypoints[21].points.Add(new Vector3(-92, -84, 1));
+            tankWaypoints[21].points.Add(new Vector3(-92, -77, 1));
+            tankWaypoints[21].points.Add(new Vector3(-124, -77, 1));
+            tankWaypoints[21].points.Add(new Vector3(-134, -84, 1));
+            tankWaypoints[21].points.Add(new Vector3(-146, -84, 1));
+            tankWaypoints[21].points.Add(new Vector3(-146, -77, 1));
+            tankWaypoints[21].points.Add(new Vector3(-131, -77, 1));
+            tankWaypoints[21].points.Add(new Vector3(-124, -84, 1));
+            tankWaypoints[21].points.Add(new Vector3(-101, -84, 1));
+            tankWaypoints[21].points.Add(new Vector3(-100, -84, 1));
+            tankWaypoints[21].points.Add(new Vector3(-91, -84, 1));
 
-            //tankWaypoints[20].points.Add(new );
+            //tankWaypoints[21].points.Add(new );
 
             for (int i = 0; i < tankWaypoints.Count; i++)
             {

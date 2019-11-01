@@ -14,12 +14,29 @@ namespace Raid_on_Bungleing_Bay.Entities
     class Factory : ModelEntity
     {
         Factory _mirror;
-        public Factory (Game game, Camera camera, GameLogic gameLogic, Vector3 position, Factory mirror = null) : base(game, camera)
+        public Factory (Game game, Camera camera, GameLogic gameLogic, Vector3 position, Factory mirror = null)
+            : base(game, camera)
         {
             Position = position;
 
+            switch(Helper.RandomMinMax(1, 4))
+            {
+                case 2:
+                    PO.Rotation.Z = MathHelper.PiOver2;
+                    break;
+                case 3:
+                    PO.Rotation.Z = MathHelper.Pi;
+                    break;
+                case 4:
+                    PO.Rotation.Z = MathHelper.Pi + MathHelper.PiOver2;
+                    break;
+            }
+
             if (mirror != null)
+            {
                 _mirror = mirror;
+                Rotation = mirror.Rotation;
+            }
         }
 
         public override void Initialize()

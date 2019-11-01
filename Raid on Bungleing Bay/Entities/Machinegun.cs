@@ -16,17 +16,20 @@ namespace Raid_on_Bungleing_Bay.Entities
         GameLogic _logic;
         Shot _shot;
         Player _player;
+        Machinegun _master;
         Machinegun _mirror;
         Mode _currentMode = Mode.idle;
         Timer _searchForPlayerTimer;
         Vector3 _targetPos;
         Vector3 _targetOldPos;
+        bool _mirrored = false;
         #endregion
         #region Properties
-
+        public Machinegun Mirror { get => _mirror; set => _mirror = value; }
         #endregion
         #region Constructor
-        public Machinegun(Game game, Camera camera, GameLogic gameLogic, Vector3 position, Machinegun mirror = null) : base(game, camera)
+        public Machinegun(Game game, Camera camera, GameLogic gameLogic, Vector3 position,
+            Machinegun master = null) : base(game, camera)
         {
             _logic = gameLogic;
             Position = position;
@@ -37,8 +40,13 @@ namespace Raid_on_Bungleing_Bay.Entities
             _player = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
 
-            if (mirror != null)
-                _mirror = mirror;
+            if (master != null)
+            {
+                _master = master;
+                master.Mirror = this;
+                _mirrored = true;
+                Rotation = master.Rotation;
+            }
         }
         #endregion
         #region Initialize
@@ -52,6 +60,9 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Update
         public override void Update(GameTime gameTime)
         {
+            if (_mirrored)
+                return;
+
             switch (_currentMode)
             {
                 case Mode.idle:

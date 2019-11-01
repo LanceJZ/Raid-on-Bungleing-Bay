@@ -54,7 +54,7 @@ namespace Raid_on_Bungleing_Bay.Controllers
             _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-46, -67, 2)));
             _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-69, -70, 2)));
             _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-77, -68, 2)));
-            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-95, -81, 2)));
+            _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-95, -80.5f, 2)));
             _factories.Add(new Factory(Game, _camera, _logic, new Vector3(-150, -80, 2)));
 
             List<Factory> mirrorFactories = new List<Factory>();
