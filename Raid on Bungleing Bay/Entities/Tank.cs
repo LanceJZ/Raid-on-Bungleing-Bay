@@ -31,24 +31,23 @@ namespace Raid_on_Bungleing_Bay.Entities
         GameLogic _logicRef;
         Shot _shot;
         Player _playerRef;
-        Tank _mirror;
+        Tank _puppet;
+        Tank _master;
         Mode _currentMode = Mode.idle;
-        Heading _currentHeading = Heading.toEnd;
         Timer _searchForPlayerTimer;
         Vector3 _targetPos;
         Vector3 _targetOldPos;
-        Vector3 _patrolStart;
-        Vector3 _patrolEnd;
         List<Vector3> _patrolRoute;
         int _patrolNextWayPoint = 1;
         int _patrolPoint = 1;
+        bool _puppeted = false;
         #endregion
         #region Properties
-
+        public Tank Puppet { get => _puppet; set => _puppet = value; }
         #endregion
         #region Constructor
         public Tank(Game game, Camera camera, GameLogic gameLogic, List<Vector3> route,
-            Tank mirror = null) : base(game, camera)
+            Tank master = null) : base(game, camera)
         {
             Enabled = true;
             _logicRef = gameLogic;
@@ -58,8 +57,12 @@ namespace Raid_on_Bungleing_Bay.Entities
             Position = route[0];
             _patrolRoute = route;
 
-            if (mirror != null)
-                _mirror = mirror;
+            if (master != null)
+            {
+                _master = master;
+                _master.Puppet = this;
+                _puppeted = true;
+            }
         }
         #endregion
         #region Initialize
@@ -119,6 +122,16 @@ namespace Raid_on_Bungleing_Bay.Entities
             float angle = Helper.AngleFromVectorsZ(Position, _patrolRoute[_patrolNextWayPoint]);
             PO.Rotation.Z = angle;
             Velocity = Helper.VelocityFromAngleZ(angle, 2.5f);
+
+            if (_puppet != null)
+            {
+                _puppet.Velocity = Velocity;
+            }
+
+            if (_puppeted)
+            {
+                _master.Velocity = Velocity;
+            }
 
             if (_searchForPlayerTimer.Elapsed)
             {
@@ -190,106 +203,127 @@ namespace Raid_on_Bungleing_Bay.Entities
                 PO.RotationAcceleration.Z = 0;
                 _currentMode = Mode.fire;
             }
+
+            if (_puppet != null)
+            {
+                _puppet.Rotation = Rotation;
+            }
+
+            if (_puppeted)
+            {
+                _master.Rotation = Rotation;
+            }
         }
 
-        void FireShot()
+        void FireShot(bool master = true)
         {
             if (_shot.Enabled)
                 return;
+
+            if (_puppet != null)
+            {
+                _puppet.FireShot(false);
+            }
+
+            if (_puppeted && master)
+            {
+                _master.FireShot();
+            }
 
             _shot.Fire(Position, Helper.VelocityFromAngleZ(PO.Rotation.Z, 10));
             _searchForPlayerTimer.Reset();
             _currentMode = Mode.idle;
         }
-        void MoveTankToStart()
-        {
-            if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.25f ||
-                PO.Rotation.Z < (MathHelper.Pi + MathHelper.Pi / 2) - 0.25f)
-            {
-                PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolStart, Rotation.Z, 0.25f);
-            }
-            else
-            {
-                PO.RotationVelocity.Z = 0;
-                PO.Rotation.Z = MathHelper.Pi + MathHelper.Pi / 2;
 
-                if ((int)_patrolStart.X == (int)_patrolEnd.X)
-                {
-                    if (Y < _patrolStart.Y)
-                    {
-                        PO.Velocity.Y = 0;
-                        _currentHeading = Heading.toEnd;
-                    }
-                    else
-                    {
-                        PO.Velocity.Y = -2.5f;
-                    }
-                }
-                else
-                {
-                    if (X < _patrolStart.X)
-                    {
-                        PO.Velocity.X = 0;
-                        _currentHeading = Heading.toEnd;
-                    }
-                    else
-                    {
-                        PO.Velocity.X = -2.5f;
-                    }
-                }
-            }
-        }
+        //void MoveTankToStart()
+        //{
+        //    if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.25f ||
+        //        PO.Rotation.Z < (MathHelper.Pi + MathHelper.Pi / 2) - 0.25f)
+        //    {
+        //        PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolStart, Rotation.Z, 0.25f);
+        //    }
+        //    else
+        //    {
+        //        PO.RotationVelocity.Z = 0;
+        //        PO.Rotation.Z = MathHelper.Pi + MathHelper.Pi / 2;
 
-        void MoveTankToEnd() //Tanks not moving.
-        {
-            if ((int)_patrolStart.X == (int)_patrolEnd.X)
-            {
-                if (PO.Rotation.Z > (MathHelper.Pi / 2) + 0.25f || PO.Rotation.Z < (MathHelper.Pi / 2) - 0.25f)
-                {
-                    PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
-                }
-                else
-                {
-                    PO.RotationVelocity.Z = 0;
-                    PO.Rotation.Z = MathHelper.Pi / 2;
+        //        if ((int)_patrolStart.X == (int)_patrolEnd.X)
+        //        {
+        //            if (Y < _patrolStart.Y)
+        //            {
+        //                PO.Velocity.Y = 0;
+        //                _currentHeading = Heading.toEnd;
+        //            }
+        //            else
+        //            {
+        //                PO.Velocity.Y = -2.5f;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (X < _patrolStart.X)
+        //            {
+        //                PO.Velocity.X = 0;
+        //                _currentHeading = Heading.toEnd;
+        //            }
+        //            else
+        //            {
+        //                PO.Velocity.X = -2.5f;
+        //            }
+        //        }
+        //    }
+        //}
 
-                    if ((int)_patrolStart.X == (int)_patrolEnd.X)
-                    {
-                        if (Y > _patrolEnd.Y)
-                        {
-                            PO.Velocity.Y = 0;
-                            _currentHeading = Heading.toStart;
-                        }
-                        else
-                        {
-                            PO.Velocity.Y = 2.5f;
-                        }
-                    }
-                    else
-                    {
-                        if (PO.Rotation.Z > 0 + 0.25f || PO.Rotation.Z < (MathHelper.TwoPi) - 0.25f)
-                        {
-                            PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
-                        }
-                        else
-                        {
-                            PO.RotationVelocity.Z = 0;
-                            PO.Rotation.Z = 0;
+        //void MoveTankToEnd() //Tanks not moving.
+        //{
+        //    if ((int)_patrolStart.X == (int)_patrolEnd.X)
+        //    {
+        //        if (PO.Rotation.Z > (MathHelper.Pi / 2) + 0.25f || PO.Rotation.Z < (MathHelper.Pi / 2) - 0.25f)
+        //        {
+        //            PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
+        //        }
+        //        else
+        //        {
+        //            PO.RotationVelocity.Z = 0;
+        //            PO.Rotation.Z = MathHelper.Pi / 2;
 
-                            if (X > _patrolEnd.X)
-                            {
-                                PO.Velocity.X = 0;
-                                _currentHeading = Heading.toStart;
-                            }
-                            else
-                            {
-                                PO.Velocity.X = 2.5f;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        //            if ((int)_patrolStart.X == (int)_patrolEnd.X)
+        //            {
+        //                if (Y > _patrolEnd.Y)
+        //                {
+        //                    PO.Velocity.Y = 0;
+        //                    _currentHeading = Heading.toStart;
+        //                }
+        //                else
+        //                {
+        //                    PO.Velocity.Y = 2.5f;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                if (PO.Rotation.Z > 0 + 0.25f || PO.Rotation.Z < (MathHelper.TwoPi) - 0.25f)
+        //                {
+        //                    PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
+        //                }
+        //                else
+        //                {
+        //                    PO.RotationVelocity.Z = 0;
+        //                    PO.Rotation.Z = 0;
+
+        //                    if (X > _patrolEnd.X)
+        //                    {
+        //                        PO.Velocity.X = 0;
+        //                        _currentHeading = Heading.toStart;
+        //                    }
+        //                    else
+        //                    {
+        //                        PO.Velocity.X = 2.5f;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
     }
 }

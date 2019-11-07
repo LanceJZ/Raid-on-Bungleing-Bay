@@ -17,15 +17,15 @@ namespace Raid_on_Bungleing_Bay.Entities
         Shot _shot;
         Player _player;
         Machinegun _master;
-        Machinegun _mirror;
+        Machinegun _puppet;
         Mode _currentMode = Mode.idle;
         Timer _searchForPlayerTimer;
         Vector3 _targetPos;
         Vector3 _targetOldPos;
-        bool _mirrored = false;
+        bool _puppeted = false;
         #endregion
         #region Properties
-        public Machinegun Mirror { get => _mirror; set => _mirror = value; }
+        public Machinegun Puppet { get => _puppet; set => _puppet = value; }
         #endregion
         #region Constructor
         public Machinegun(Game game, Camera camera, GameLogic gameLogic, Vector3 position,
@@ -43,8 +43,9 @@ namespace Raid_on_Bungleing_Bay.Entities
             if (master != null)
             {
                 _master = master;
-                master.Mirror = this;
-                _mirrored = true;
+                master.Puppet = this;
+                _puppeted = true;
+                _searchForPlayerTimer.Enabled = false;
                 Rotation = master.Rotation;
             }
         }
@@ -60,8 +61,12 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Update
         public override void Update(GameTime gameTime)
         {
-            if (_mirrored)
-                return;
+            base.Update(gameTime);
+
+            if (_puppeted)
+            {
+                //return; //TODO: Puppet needs to search for player too, and control master.
+            }
 
             switch (_currentMode)
             {
@@ -78,28 +83,26 @@ namespace Raid_on_Bungleing_Bay.Entities
                     TurnTowardsPlayer();
                     break;
             }
-
-            base.Update(gameTime);
         }
         #endregion
         void Idle()
         {
             if (_searchForPlayerTimer.Elapsed)
+            {
+                _searchForPlayerTimer.Reset();
                 _currentMode = Mode.search;
+            }
         }
 
         void SearchForPlayer() //Do this on move too.
         {
-            _searchForPlayerTimer.Reset();
-
             if (Helper.RandomMinMax(0, 10) > 1)
             {
-                if (Vector3.Distance(Position, _player.Position) < 15) //25 works for game.
+                if (Vector3.Distance(Position, _player.Position) < 25) //25 works for game.
                 {
                     _targetOldPos = _targetPos;
                     _targetPos = _player.Position;
                     _currentMode = Mode.turn;
-                    Velocity = Vector3.Zero;
                     RotationVelocity = Vector3.Zero;
                 }
                 else
@@ -148,16 +151,37 @@ namespace Raid_on_Bungleing_Bay.Entities
                 PO.RotationAcceleration.Z = 0;
                 _currentMode = Mode.fire;
             }
+
+            if (_puppet != null)
+            {
+                _puppet.Rotation = Rotation;
+            }
+
+            if (_puppeted)
+            {
+                _master.Rotation = Rotation;
+            }
         }
 
-        void FireShot()
+        public void FireShot(bool master = true)
         {
-            if (!_shot.Enabled)
+            _currentMode = Mode.idle;
+
+            if (_shot.Enabled)
                 return;
+
+            if (_puppet != null)
+            {
+                _puppet.FireShot(false);
+            }
+
+            if (_puppeted && master)
+            {
+                _master.FireShot();
+            }
 
             _shot.Fire(Position, Helper.VelocityFromAngleZ(PO.Rotation.Z, 10));
             _searchForPlayerTimer.Reset();
-            _currentMode = Mode.idle;
         }
     }
 }

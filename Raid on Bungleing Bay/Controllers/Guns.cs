@@ -15,7 +15,8 @@ namespace Raid_on_Bungleing_Bay.Controllers
         #region Fields
         GameLogic _logic;
         Camera _camera;
-        List<Entities.Machinegun> _guns;
+        List<Machinegun> _guns;
+        List<Machinegun> _puppetGuns;
 
         #endregion
         #region Properties
@@ -27,7 +28,8 @@ namespace Raid_on_Bungleing_Bay.Controllers
             _logic = gameLogic;
             _camera = camera;
 
-            _guns = new List<Entities.Machinegun>();
+            _guns = new List<Machinegun>();
+            _puppetGuns = new List<Machinegun>();
 
             game.Components.Add(this);
         }
@@ -66,29 +68,28 @@ namespace Raid_on_Bungleing_Bay.Controllers
             _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(113, -117, 1)));
             _guns.Add(new Machinegun(Game, _camera, _logic, new Vector3(142, -95, 1)));
 
-            List<Machinegun> mirrorGuns = new List<Machinegun>();
             //Mirrors.
             foreach (Machinegun gun in _guns)
             {
                 if (gun.Y > 80)
                 {
-                    mirrorGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X, gun.Y - 250, gun.Z), gun));
+                    _puppetGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X, gun.Y - 250, gun.Z), gun));
                 }
 
 
                 if (gun.Y < -80)
                 {
-                    mirrorGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X, gun.Y + 250, gun.Z), gun));
+                    _puppetGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X, gun.Y + 250, gun.Z), gun));
                 }
 
                 if (gun.X > 126)
                 {
-                    mirrorGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X - 400, gun.Y, gun.Z), gun));
+                    _puppetGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X - 400, gun.Y, gun.Z), gun));
                 }
 
                 if (gun.X < -126)
                 {
-                    mirrorGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X + 400, gun.Y, gun.Z), gun));
+                    _puppetGuns.Add(new Machinegun(Game, _camera, _logic, new Vector3(gun.X + 400, gun.Y, gun.Z), gun));
                 }
             }
 
