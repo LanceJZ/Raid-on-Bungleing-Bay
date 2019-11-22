@@ -10,14 +10,14 @@ using Panther;
 #endregion
 namespace Raid_on_Bungleing_Bay.Entities
 {
-    class Machinegun : ModelEntity
+    class Gun : ModelEntity
     {
         #region Fields
         GameLogic _logic;
         Shot _shot;
         Player _player;
-        Machinegun _master;
-        Machinegun _puppet;
+        Gun _master;
+        Gun _puppet;
         Mode _currentMode = Mode.idle;
         Timer _searchForPlayerTimer;
         Vector3 _targetPos;
@@ -25,11 +25,11 @@ namespace Raid_on_Bungleing_Bay.Entities
         bool _puppeted = false;
         #endregion
         #region Properties
-        public Machinegun Puppet { get => _puppet; set => _puppet = value; }
+        public Gun Puppet { get => _puppet; set => _puppet = value; }
         #endregion
         #region Constructor
-        public Machinegun(Game game, Camera camera, GameLogic gameLogic, Vector3 position,
-            Machinegun master = null) : base(game, camera)
+        public Gun(Game game, Camera camera, GameLogic gameLogic, Vector3 position,
+            Gun master = null) : base(game, camera)
         {
             _logic = gameLogic;
             Position = position;
@@ -62,11 +62,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            if (_puppeted)
-            {
-                //return; //TODO: Puppet needs to search for player too, and control master.
-            }
 
             switch (_currentMode)
             {

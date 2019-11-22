@@ -49,12 +49,13 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controllers\JetPlanes.cs" />
     <Compile Include="Controllers\Radars.cs" />
     <Compile Include="Controllers\Guns.cs" />
     <Compile Include="Controllers\Factories.cs" />
     <Compile Include="Controllers\Tanks.cs" />
     <Compile Include="Entities\JetPlane.cs" />
-    <Compile Include="Entities\Machinegun.cs" />
+    <Compile Include="Entities\Gun.cs" />
     <Compile Include="Entities\Radar.cs" />
     <Compile Include="Entities\Shot.cs" />
     <Compile Include="Entities\Tank.cs" />

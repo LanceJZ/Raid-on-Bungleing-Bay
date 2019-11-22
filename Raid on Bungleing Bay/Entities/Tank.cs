@@ -19,12 +19,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         fire
     }
 
-    enum Heading
-    {
-        toStart,
-        toEnd
-    }
-
     class Tank : ModelEntity
     {
         #region Fields
@@ -37,6 +31,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         Timer _searchForPlayerTimer;
         Vector3 _targetPos;
         Vector3 _targetOldPos;
+        Vector3 _puppetOffset;
         List<Vector3> _patrolRoute;
         int _patrolNextWayPoint = 1;
         int _patrolPoint = 1;
@@ -44,24 +39,31 @@ namespace Raid_on_Bungleing_Bay.Entities
         #endregion
         #region Properties
         public Tank Puppet { get => _puppet; set => _puppet = value; }
+        public List<Vector3> PatrolRoute { get => _patrolRoute; set => _patrolRoute = value; }
+        public Vector3 PuppetOffset { get => _puppetOffset; set => _puppetOffset = value; }
         #endregion
         #region Constructor
         public Tank(Game game, Camera camera, GameLogic gameLogic, List<Vector3> route,
-            Tank master = null) : base(game, camera)
+            Vector3 puppetOffset, Tank master = null) : base(game, camera)
         {
             Enabled = true;
             _logicRef = gameLogic;
             _playerRef = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
             _searchForPlayerTimer = new Timer(game, 1);
-            Position = route[0];
-            _patrolRoute = route;
 
             if (master != null)
             {
                 _master = master;
                 _master.Puppet = this;
                 _puppeted = true;
+                Position = route[0] + puppetOffset;
+                _puppetOffset = puppetOffset;
+            }
+            else
+            {
+                Position = route[0];
+                PatrolRoute = route;
             }
         }
         #endregion
@@ -78,7 +80,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Update
         public override void Update(GameTime gameTime)
         {
-
             switch (_currentMode)
             {
                 case Mode.idle:
@@ -104,10 +105,13 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void Move()
         {
-            if (0.25f > Vector3.Distance(Position, _patrolRoute[_patrolNextWayPoint]))
+            if (_puppeted)
+                return;
+
+            if (0.25f > Vector3.Distance(Position, PatrolRoute[_patrolNextWayPoint]))
             {
 
-                if (_patrolNextWayPoint + 1 > _patrolRoute.Count - 1)
+                if (_patrolNextWayPoint + 1 > PatrolRoute.Count - 1)
                 {
                     _patrolPoint = -1;
                 }
@@ -119,18 +123,14 @@ namespace Raid_on_Bungleing_Bay.Entities
                 _patrolNextWayPoint += _patrolPoint;
             }
 
-            float angle = Helper.AngleFromVectorsZ(Position, _patrolRoute[_patrolNextWayPoint]);
+            float angle = Helper.AngleFromVectorsZ(Position, PatrolRoute[_patrolNextWayPoint]);
             PO.Rotation.Z = angle;
             Velocity = Helper.VelocityFromAngleZ(angle, 2.5f);
 
             if (_puppet != null)
             {
-                _puppet.Velocity = Velocity;
-            }
-
-            if (_puppeted)
-            {
-                _master.Velocity = Velocity;
+                _puppet.Position = Position + _puppet.PuppetOffset;
+                _puppet.Rotation = Rotation;
             }
 
             if (_searchForPlayerTimer.Elapsed)
@@ -147,7 +147,7 @@ namespace Raid_on_Bungleing_Bay.Entities
                 _currentMode = Mode.search;
         }
 
-        void SearchForPlayer() //Do this on move too.
+        void SearchForPlayer()
         {
             _searchForPlayerTimer.Reset();
 
@@ -160,6 +160,11 @@ namespace Raid_on_Bungleing_Bay.Entities
                     _currentMode = Mode.turn;
                     Velocity = Vector3.Zero;
                     RotationVelocity = Vector3.Zero;
+
+                    if (_puppet != null)
+                    {
+                        _puppet.Rotation = Rotation;
+                    }
                 }
                 else
                 {
@@ -168,7 +173,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
         }
 
-        void TurnTowardsPlayer()
+        void TurnTowardsPlayer()//TODO: See if I can get puppet to aim and shoot at player.
         {
             PO.RotationAcceleration.Z = Helper.AimAtTargetZ(Position, _targetPos, Rotation.Z, 0.15f);
 
@@ -234,96 +239,5 @@ namespace Raid_on_Bungleing_Bay.Entities
             _searchForPlayerTimer.Reset();
             _currentMode = Mode.idle;
         }
-
-        //void MoveTankToStart()
-        //{
-        //    if (PO.Rotation.Z > (MathHelper.Pi + MathHelper.Pi / 2) + 0.25f ||
-        //        PO.Rotation.Z < (MathHelper.Pi + MathHelper.Pi / 2) - 0.25f)
-        //    {
-        //        PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolStart, Rotation.Z, 0.25f);
-        //    }
-        //    else
-        //    {
-        //        PO.RotationVelocity.Z = 0;
-        //        PO.Rotation.Z = MathHelper.Pi + MathHelper.Pi / 2;
-
-        //        if ((int)_patrolStart.X == (int)_patrolEnd.X)
-        //        {
-        //            if (Y < _patrolStart.Y)
-        //            {
-        //                PO.Velocity.Y = 0;
-        //                _currentHeading = Heading.toEnd;
-        //            }
-        //            else
-        //            {
-        //                PO.Velocity.Y = -2.5f;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (X < _patrolStart.X)
-        //            {
-        //                PO.Velocity.X = 0;
-        //                _currentHeading = Heading.toEnd;
-        //            }
-        //            else
-        //            {
-        //                PO.Velocity.X = -2.5f;
-        //            }
-        //        }
-        //    }
-        //}
-
-        //void MoveTankToEnd() //Tanks not moving.
-        //{
-        //    if ((int)_patrolStart.X == (int)_patrolEnd.X)
-        //    {
-        //        if (PO.Rotation.Z > (MathHelper.Pi / 2) + 0.25f || PO.Rotation.Z < (MathHelper.Pi / 2) - 0.25f)
-        //        {
-        //            PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
-        //        }
-        //        else
-        //        {
-        //            PO.RotationVelocity.Z = 0;
-        //            PO.Rotation.Z = MathHelper.Pi / 2;
-
-        //            if ((int)_patrolStart.X == (int)_patrolEnd.X)
-        //            {
-        //                if (Y > _patrolEnd.Y)
-        //                {
-        //                    PO.Velocity.Y = 0;
-        //                    _currentHeading = Heading.toStart;
-        //                }
-        //                else
-        //                {
-        //                    PO.Velocity.Y = 2.5f;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                if (PO.Rotation.Z > 0 + 0.25f || PO.Rotation.Z < (MathHelper.TwoPi) - 0.25f)
-        //                {
-        //                    PO.RotationVelocity.Z = Helper.AimAtTargetZ(Position, _patrolEnd, Rotation.Z, 0.25f);
-        //                }
-        //                else
-        //                {
-        //                    PO.RotationVelocity.Z = 0;
-        //                    PO.Rotation.Z = 0;
-
-        //                    if (X > _patrolEnd.X)
-        //                    {
-        //                        PO.Velocity.X = 0;
-        //                        _currentHeading = Heading.toStart;
-        //                    }
-        //                    else
-        //                    {
-        //                        PO.Velocity.X = 2.5f;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
     }
 }

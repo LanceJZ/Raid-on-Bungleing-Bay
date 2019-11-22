@@ -13,56 +13,60 @@ namespace Raid_on_Bungleing_Bay.Entities
     class JetPlane : ModelEntity
     {
         #region Fields
-        GameLogic _logicRef;
+        GameLogic _logic;
         Shot _shot;
-        Player _playerRef;
-        Land _landRef;
-        JetPlane _mirror;
+        Player _player;
+        Land _land;
+        JetPlane _puppetX;
+        JetPlane _puppetY;
         Mode _currentMode = Mode.idle;
         Timer _searchForPlayerTimer;
         Timer _changeCourseTimer;
         Vector3 _targetPos;
         Vector3 _targetOldPos;
-        //Vector2 _widthHeight;
+        bool _puppet;
 
+        internal JetPlane PuppetX { get => _puppetX; set => _puppetX = value; }
+        internal JetPlane PuppetY { get => _puppetY; set => _puppetY = value; }
         #endregion
         #region Properties
 
         #endregion
         #region Constructor
-        public JetPlane(Game game, Camera camera, GameLogic gameLogic, JetPlane mirror = null) : base(game, camera)
+        public JetPlane(Game game, Camera camera, GameLogic gameLogic, bool puppet = false) : base(game, camera)
         {
-            _logicRef = gameLogic;
-            _landRef = gameLogic._land;
-            _playerRef = gameLogic._player;
+            _logic = gameLogic;
+            _land = gameLogic._land;
+            _logic = gameLogic;
+            _player = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
             _searchForPlayerTimer = new Timer(game, 1);
             _changeCourseTimer = new Timer(game, 5);
-
-            if (mirror != null)
-                _mirror = mirror;
-
-            //Enabled = false;
+            _puppet = puppet;
+            PO.MapSize = new Vector2(_land.BoundingBox.Width, _land.BoundingBox.Height);
         }
         #endregion
         #region Initialize
         public override void Initialize()
         {
-            Position = new Vector3(-2, -2, 10);
-
 
             base.Initialize();
 
             LoadModel("JetPlane");
 
-            ChangeHeading();
+            if (!_puppet)
+                return;
 
-            PO.MapSize = new Vector2(_landRef.BoundingBox.Width, _landRef.BoundingBox.Height);
+            _puppetX.Enabled = false;
+            _puppetY.Enabled = false;
         }
         #endregion
         #region Update
         public override void Update(GameTime gameTime)
         {
+            if (_puppet)
+                return;
+
             switch (_currentMode)
             {
                 case Mode.idle:
@@ -83,37 +87,79 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
 
             PO.CheckEdgeOfMap();
-            Mirror();
+
+            Puppets();
 
             base.Update(gameTime);
         }
         #endregion
         #region Public methods
+        public override void Spawn(Vector3 position, Vector3 rotation)
+        {
+            _changeCourseTimer.Reset();
+            _searchForPlayerTimer.Reset();
+
+            base.Spawn(position, rotation);
+        }
         #endregion
         #region Private/Protected methods
-        void Mirror()
+        void Puppets()
         {
+            if (_puppetX == null)
+                return;
+
+            if (_puppetY == null)
+                return;
+
             if (Y > 86)
             {
-
+                _puppetY.PO.Position.Y = PO.Position.Y + 250;
+                _puppetY.PO.Position.Z = 10;
+                _puppetY.Enabled = true;
             }
             else if (Y < -86)
             {
-
+                _puppetY.PO.Position.Y = PO.Position.Y - 250;
+                _puppetY.PO.Position.Z = 10;
+                _puppetY.Enabled = true;
             }
-            else if (X > 100)
+            else
             {
+                _puppetY.Enabled = false;
+            }
 
+            if (X > 100)
+            {
+                _puppetX.PO.Position.X = PO.Position.X + 400;
+                _puppetX.PO.Position.Z = 10;
+                _puppetX.Enabled = true;
+            }
+            else if (X < 100)
+            {
+                _puppetX.PO.Position.X = PO.Position.X - 400;
+                _puppetX.PO.Position.Z = 10;
+                _puppetX.Enabled = true;
+            }
+            else
+            {
+                _puppetX.Enabled = false;
             }
         }
 
         void Idle()
         {
-            if (_searchForPlayerTimer.Elapsed)
-                _currentMode = Mode.search;
-
             if (_changeCourseTimer.Elapsed)
+            {
+                if (Velocity.Length() < 1)
+                {
+                    Velocity = Helper.VelocityFromAngleZ(Rotation.Z, 10);
+                    _changeCourseTimer.Reset();
+                    return;
+                }
+
+                PO.Position.Z = 10;
                 ChangeHeading();
+            }
         }
 
         void ChangeHeading()
@@ -127,7 +173,8 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         void Move()
         {
-
+            if (_searchForPlayerTimer.Elapsed)
+                _currentMode = Mode.search;
         }
 
         void SearchForPlayer() //Do this on move too.
@@ -136,10 +183,10 @@ namespace Raid_on_Bungleing_Bay.Entities
 
             if (Helper.RandomMinMax(0, 10) > 1)
             {
-                if (Vector3.Distance(Position, _playerRef.Position) < 35) //35 works for game.
+                if (Vector3.Distance(Position, _player.Position) < 35) //35 works for game.
                 {
                     _targetOldPos = _targetPos;
-                    _targetPos = _playerRef.Position;
+                    _targetPos = _player.Position;
                     _currentMode = Mode.turn;
                     RotationVelocity = Vector3.Zero;
                 }

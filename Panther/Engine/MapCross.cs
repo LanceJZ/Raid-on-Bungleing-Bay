@@ -156,7 +156,6 @@ namespace Panther
 
                 foreach(Vector3 v in _pointsOfInterest)
                 {
-                    pointsOut += "X: " + v.X.ToString() + " Y: " + v.Y.ToString() + " Z: " + v.Z.ToString() + "\n";
                     pointsOut += "Vector3(" + v.X.ToString() + ", " + v.Y.ToString() + ", " + v.Z.ToString() + ")\n";
                 }
 

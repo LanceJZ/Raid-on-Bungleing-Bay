@@ -17,6 +17,7 @@ namespace Raid_on_Bungleing_Bay.Controllers
         Camera _camera;
         Player _player;
         List<Tank> _tanks;
+        List<Tank> _puppetTanks;
         #endregion
         #region Properties
 
@@ -28,6 +29,7 @@ namespace Raid_on_Bungleing_Bay.Controllers
             _player = gameLogic._player;
             _camera = camera;
             _tanks = new List<Tank>();
+            _puppetTanks = new List<Tank>();
 
             game.Components.Add(this);
         }
@@ -221,7 +223,35 @@ namespace Raid_on_Bungleing_Bay.Controllers
 
             for (int i = 0; i < tankWaypoints.Count; i++)
             {
-                _tanks.Add(new Tank(Game, _camera, _logic, tankWaypoints[i].points));
+                _tanks.Add(new Tank(Game, _camera, _logic, tankWaypoints[i].points, Vector3.Zero));
+            }
+
+            //Puppets.
+            foreach (Tank tank in _tanks)
+            {
+                if (tank.Y > 80)
+                {
+                    _puppetTanks.Add(new Tank(Game, _camera, _logic, tank.PatrolRoute,
+                        new Vector3(0, -250, 0), tank));
+                }
+
+                if (tank.Y < -80)
+                {
+                    _puppetTanks.Add(new Tank(Game, _camera, _logic, tank.PatrolRoute,
+                        new Vector3(0, 250, 0), tank));
+                }
+
+                if (tank.X > 126)
+                {
+                    _puppetTanks.Add(new Tank(Game, _camera, _logic, tank.PatrolRoute,
+                        new Vector3(-400, 0, 0), tank));
+                }
+
+                if (tank.X < -126)
+                {
+                    _puppetTanks.Add(new Tank(Game, _camera, _logic, tank.PatrolRoute,
+                        new Vector3(400, 0, 0), tank));
+                }
             }
 
             base.Initialize();

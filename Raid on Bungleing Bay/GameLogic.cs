@@ -27,13 +27,12 @@ namespace Raid_on_Bungleing_Bay
 
         GameState _mode = GameState.InPlay;
         public NumberGenerator _score;
-
         public Land _land;
         Factories _factories;
         Tanks _tanks;
         Guns _guns;
         Radars _radars;
-        JetPlane TheJet;
+        JetPlanes _jetPlanes;
         public Player _player;
         bool _devMode = true;
         MapCross _mapCross;
@@ -59,7 +58,7 @@ namespace Raid_on_Bungleing_Bay
             _guns = new Guns(game, camera, this);
             _radars = new Radars(game, camera, this);
             _tanks = new Tanks(game, camera, this);
-            TheJet = new JetPlane(game, camera, this);
+            _jetPlanes = new JetPlanes(game, camera, this);
 
             _mapCross = new MapCross(game, camera);
 
