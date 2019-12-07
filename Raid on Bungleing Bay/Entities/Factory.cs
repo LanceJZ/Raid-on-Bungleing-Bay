@@ -42,7 +42,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         public override void Initialize()
         {
             Enabled = true;
-            LoadModel("Factory");
+            ModelFileName = "Factory";
 
             base.Initialize();
         }

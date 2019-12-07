@@ -41,24 +41,18 @@ namespace Raid_on_Bungleing_Bay.Entities
             _player = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
             _searchForPlayerTimer = new Timer(game, 1);
-            _changeCourseTimer = new Timer(game, 5);
+            _changeCourseTimer = new Timer(game, 25);
             _puppet = puppet;
             PO.MapSize = new Vector2(_land.BoundingBox.Width, _land.BoundingBox.Height);
+            Enabled = false;
         }
         #endregion
         #region Initialize
         public override void Initialize()
         {
+            ModelFileName = "JetPlane";
 
             base.Initialize();
-
-            LoadModel("JetPlane");
-
-            if (!_puppet)
-                return;
-
-            _puppetX.Enabled = false;
-            _puppetY.Enabled = false;
         }
         #endregion
         #region Update
@@ -66,6 +60,9 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             if (_puppet)
                 return;
+
+            PuppetX.Update(gameTime);
+            PuppetY.Update(gameTime);
 
             switch (_currentMode)
             {
@@ -87,7 +84,6 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
 
             PO.CheckEdgeOfMap();
-
             Puppets();
 
             base.Update(gameTime);
@@ -98,6 +94,8 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             _changeCourseTimer.Reset();
             _searchForPlayerTimer.Reset();
+            _puppetX.Enabled = false;
+            _puppetY.Enabled = false;
 
             base.Spawn(position, rotation);
         }
@@ -105,22 +103,18 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Private/Protected methods
         void Puppets()
         {
-            if (_puppetX == null)
-                return;
-
-            if (_puppetY == null)
-                return;
-
-            if (Y > 86)
+            if (Y > 84f)
             {
-                _puppetY.PO.Position.Y = PO.Position.Y + 250;
-                _puppetY.PO.Position.Z = 10;
+                _puppetY.X = X;
+                _puppetY.Y = Y - 250;
+                _puppetY.Z = Z;
                 _puppetY.Enabled = true;
             }
-            else if (Y < -86)
+            else if (Y < -84f)
             {
-                _puppetY.PO.Position.Y = PO.Position.Y - 250;
-                _puppetY.PO.Position.Z = 10;
+                _puppetY.X = X;
+                _puppetY.Y = Y + 250;
+                _puppetY.Z = Z;
                 _puppetY.Enabled = true;
             }
             else
@@ -128,16 +122,18 @@ namespace Raid_on_Bungleing_Bay.Entities
                 _puppetY.Enabled = false;
             }
 
-            if (X > 100)
+            if (X > 145)
             {
-                _puppetX.PO.Position.X = PO.Position.X + 400;
-                _puppetX.PO.Position.Z = 10;
+                _puppetX.X = X - 400;
+                _puppetX.Y = Y;
+                _puppetX.Z = Z;
                 _puppetX.Enabled = true;
             }
-            else if (X < 100)
+            else if (X < 145)
             {
-                _puppetX.PO.Position.X = PO.Position.X - 400;
-                _puppetX.PO.Position.Z = 10;
+                _puppetX.X = X + 400;
+                _puppetX.Y = Y;
+                _puppetX.Z = Z;
                 _puppetX.Enabled = true;
             }
             else
@@ -169,6 +165,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             float heading = Helper.Radian;
             PO.Rotation.Z = heading;
             Velocity = Helper.VelocityFromAngleZ(heading, 15);
+            _currentMode = Mode.search;
         }
 
         void Move()

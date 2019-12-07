@@ -229,25 +229,25 @@ namespace Raid_on_Bungleing_Bay.Controllers
             //Puppets.
             foreach (Tank tank in _tanks)
             {
-                if (tank.Y > 80)
+                if (tank.Y > 84)
                 {
                     _puppetTanks.Add(new Tank(Game, _camera, _logic, tank.PatrolRoute,
                         new Vector3(0, -250, 0), tank));
                 }
 
-                if (tank.Y < -80)
+                if (tank.Y < -84)
                 {
                     _puppetTanks.Add(new Tank(Game, _camera, _logic, tank.PatrolRoute,
                         new Vector3(0, 250, 0), tank));
                 }
 
-                if (tank.X > 126)
+                if (tank.X > 145)
                 {
                     _puppetTanks.Add(new Tank(Game, _camera, _logic, tank.PatrolRoute,
                         new Vector3(-400, 0, 0), tank));
                 }
 
-                if (tank.X < -126)
+                if (tank.X < -145)
                 {
                     _puppetTanks.Add(new Tank(Game, _camera, _logic, tank.PatrolRoute,
                         new Vector3(400, 0, 0), tank));

@@ -71,23 +71,23 @@ namespace Raid_on_Bungleing_Bay.Controllers
             //Puppets.
             foreach (Gun gun in _guns)
             {
-                if (gun.Y > 80)
+                if (gun.Y > 84)
                 {
                     _puppetGuns.Add(new Gun(Game, _camera, _logic, new Vector3(gun.X, gun.Y - 250, gun.Z), gun));
                 }
 
 
-                if (gun.Y < -80)
+                if (gun.Y < -84)
                 {
                     _puppetGuns.Add(new Gun(Game, _camera, _logic, new Vector3(gun.X, gun.Y + 250, gun.Z), gun));
                 }
 
-                if (gun.X > 126)
+                if (gun.X > 145)
                 {
                     _puppetGuns.Add(new Gun(Game, _camera, _logic, new Vector3(gun.X - 400, gun.Y, gun.Z), gun));
                 }
 
-                if (gun.X < -126)
+                if (gun.X < -145)
                 {
                     _puppetGuns.Add(new Gun(Game, _camera, _logic, new Vector3(gun.X + 400, gun.Y, gun.Z), gun));
                 }

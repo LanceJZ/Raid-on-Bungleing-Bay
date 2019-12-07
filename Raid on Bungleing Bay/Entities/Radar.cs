@@ -25,6 +25,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             _logic = gameLogic;
             Position = position;
+            LoadModel("Radar");
             //Enabled = false;
 
             if (mirror != null)
@@ -38,8 +39,6 @@ namespace Raid_on_Bungleing_Bay.Entities
 
             //Position = new Vector3(13, -22f, 1);
             PO.RotationVelocity.Z = 1;
-
-            LoadModel("Radar");
         }
         #endregion
         #region Update

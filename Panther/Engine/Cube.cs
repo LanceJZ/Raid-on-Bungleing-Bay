@@ -18,14 +18,13 @@ namespace Panther
         #region Constructor
         public Cube(Game game, Camera camera) : base(game, camera)
         {
-
+            LoadModel("Core/Cube");
         }
         #endregion
         #region Initialize
         public override void Initialize()
         {
             base.Initialize();
-            LoadModel("Core/Cube");
         }
         #endregion
         #region Update

@@ -48,23 +48,23 @@ namespace Raid_on_Bungleing_Bay.Controllers
             //Mirrors.
             foreach (Radar radar in _radars)
             {
-                if (radar.Y > 80)
+                if (radar.Y > 84)
                 {
                     mirrorFactories.Add(new Radar(Game, _camera, _logic, new Vector3(radar.X, radar.Y - 250, radar.Z), radar));
                 }
 
 
-                if (radar.Y < -80)
+                if (radar.Y < -84)
                 {
                     mirrorFactories.Add(new Radar(Game, _camera, _logic, new Vector3(radar.X, radar.Y + 250, radar.Z), radar));
                 }
 
-                if (radar.X > 126)
+                if (radar.X > 145)
                 {
                     mirrorFactories.Add(new Radar(Game, _camera, _logic, new Vector3(radar.X - 400, radar.Y, radar.Z), radar));
                 }
 
-                if (radar.X < -126)
+                if (radar.X < -145)
                 {
                     mirrorFactories.Add(new Radar(Game, _camera, _logic, new Vector3(radar.X + 400, radar.Y, radar.Z), radar));
                 }

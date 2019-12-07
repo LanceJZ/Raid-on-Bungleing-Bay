@@ -25,7 +25,7 @@ namespace Panther
         public float Alpha = 1;
         #endregion
         #region Properties
-        public Camera _camera { get => base._camera; }
+        public new Camera _camera { get => base._camera; }
 
         public Vector3 WorldPosition
         {
@@ -103,6 +103,8 @@ namespace Panther
                 }
             }
         }
+
+        public string ModelFileName { get => _modelFileName; set => _modelFileName = value; }
         #endregion
         #region Constructor
         public ModelEntity(Game game, Camera camera) : base(game, camera)
@@ -137,7 +139,7 @@ namespace Panther
         {
             base.Initialize();
 
-            if (_model == null)
+            if (_model == null && _modelFileName != null)
                 LoadModel(_modelFileName);
         }
 

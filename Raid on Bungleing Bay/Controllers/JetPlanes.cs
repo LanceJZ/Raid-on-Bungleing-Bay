@@ -80,10 +80,8 @@ namespace Raid_on_Bungleing_Bay.Controllers
             {
                 _jetPlanes.Add(new JetPlane(Game, _camera, _logic));
                 useThisOne = _jetPlanes.Count - 1;
-                //JetPlane puppetX = new JetPlane(Game, _camera, _logic, true);
-                //JetPlane puppetY = new JetPlane(Game, _camera, _logic, true);
-                //_jetPlanes[useThisOne].PuppetX = puppetX;
-                //_jetPlanes[useThisOne].PuppetY = puppetY;
+                _jetPlanes[useThisOne].PuppetX = new JetPlane(Game, _camera, _logic, true);
+                _jetPlanes[useThisOne].PuppetY = new JetPlane(Game, _camera, _logic, true);
             }
 
             int runway = Helper.RandomMinMax(0, 3);

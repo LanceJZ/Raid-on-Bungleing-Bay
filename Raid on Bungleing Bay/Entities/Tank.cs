@@ -51,6 +51,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             _playerRef = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
             _searchForPlayerTimer = new Timer(game, 1);
+            LoadModel("Tank");
 
             if (master != null)
             {
@@ -71,8 +72,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         public override void Initialize()
         {
             base.Initialize();
-
-            LoadModel("Tank");
 
             float rad = PO.Radius;
         }

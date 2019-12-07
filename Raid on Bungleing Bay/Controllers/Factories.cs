@@ -61,23 +61,23 @@ namespace Raid_on_Bungleing_Bay.Controllers
             //Mirrors.
             foreach(Factory factory in _factories)
             {
-                if (factory.Y > 80)
+                if (factory.Y > 84)
                 {
                     mirrorFactories.Add(new Factory(Game, _camera, _logic, new Vector3(factory.X, factory.Y - 250, factory.Z), factory));
                 }
 
 
-                if (factory.Y < -80)
+                if (factory.Y < -84)
                 {
                     mirrorFactories.Add(new Factory(Game, _camera, _logic, new Vector3(factory.X, factory.Y + 250, factory.Z), factory));
                 }
 
-                if (factory.X > 126)
+                if (factory.X > 145)
                 {
                     mirrorFactories.Add(new Factory(Game, _camera, _logic, new Vector3(factory.X - 400, factory.Y, factory.Z), factory));
                 }
 
-                if (factory.X < -126)
+                if (factory.X < -145)
                 {
                     mirrorFactories.Add(new Factory(Game, _camera, _logic, new Vector3(factory.X + 400, factory.Y, factory.Z), factory));
                 }
