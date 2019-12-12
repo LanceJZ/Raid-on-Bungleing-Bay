@@ -53,7 +53,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Initialize
         public override void Initialize()
         {
-            LoadModel("MachineGun");
+            ModelFileName = "MachineGun";
 
             base.Initialize();
         }

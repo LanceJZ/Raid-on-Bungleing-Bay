@@ -25,7 +25,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             _logic = gameLogic;
             Position = position;
-            LoadModel("Radar");
             //Enabled = false;
 
             if (mirror != null)
@@ -35,6 +34,8 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Initialize
         public override void Initialize()
         {
+            ModelFileName = "Radar";
+
             base.Initialize();
 
             //Position = new Vector3(13, -22f, 1);

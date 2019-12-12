@@ -19,6 +19,7 @@ namespace Raid_on_Bungleing_Bay.Controllers
         List<JetPlane> _jetPlanes;
         List<Vector3> _runways;
         Timer _takeoff;
+        int _planeMaxCount;
         #endregion
         #region Properties
 
@@ -31,6 +32,7 @@ namespace Raid_on_Bungleing_Bay.Controllers
             _jetPlanes = new List<JetPlane>();
             _runways = new List<Vector3>();
             _takeoff = new Timer(game, 15);
+            _planeMaxCount = 6;
 
             game.Components.Add(this);
         }
@@ -53,7 +55,18 @@ namespace Raid_on_Bungleing_Bay.Controllers
             {
                 _takeoff.Reset();
 
-                Takeoff();
+                int count = 0;
+
+                foreach(JetPlane plane in _jetPlanes)
+                {
+                    if (plane.Enabled)
+                        count++;
+                }
+
+                if (count < _planeMaxCount)
+                {
+                    Takeoff();
+                }
             }
 
             base.Update(gameTime);
@@ -80,8 +93,8 @@ namespace Raid_on_Bungleing_Bay.Controllers
             {
                 _jetPlanes.Add(new JetPlane(Game, _camera, _logic));
                 useThisOne = _jetPlanes.Count - 1;
-                _jetPlanes[useThisOne].PuppetX = new JetPlane(Game, _camera, _logic, true);
-                _jetPlanes[useThisOne].PuppetY = new JetPlane(Game, _camera, _logic, true);
+                _jetPlanes.Add(new JetPlane(Game, _camera, _logic, _jetPlanes[useThisOne]));
+                _jetPlanes.Add(new JetPlane(Game, _camera, _logic, _jetPlanes[useThisOne]));
             }
 
             int runway = Helper.RandomMinMax(0, 3);

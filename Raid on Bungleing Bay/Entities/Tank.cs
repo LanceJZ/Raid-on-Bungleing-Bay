@@ -36,6 +36,8 @@ namespace Raid_on_Bungleing_Bay.Entities
         int _patrolNextWayPoint = 1;
         int _patrolPoint = 1;
         bool _puppeted = false;
+        bool _puppetY = false;
+        bool _puppetX = false;
         #endregion
         #region Properties
         public Tank Puppet { get => _puppet; set => _puppet = value; }
@@ -51,7 +53,6 @@ namespace Raid_on_Bungleing_Bay.Entities
             _playerRef = gameLogic._player;
             _shot = new Shot(game, camera, gameLogic);
             _searchForPlayerTimer = new Timer(game, 1);
-            LoadModel("Tank");
 
             if (master != null)
             {
@@ -60,6 +61,12 @@ namespace Raid_on_Bungleing_Bay.Entities
                 _puppeted = true;
                 Position = route[0] + puppetOffset;
                 _puppetOffset = puppetOffset;
+                //Enabled = false;
+
+                if (puppetOffset.Y == 0)
+                    _puppetX = true;
+                else if (puppetOffset.X == 0)
+                    _puppetY = true;
             }
             else
             {
@@ -71,6 +78,8 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Initialize
         public override void Initialize()
         {
+            ModelFileName = "Tank";
+
             base.Initialize();
 
             float rad = PO.Radius;
@@ -98,9 +107,48 @@ namespace Raid_on_Bungleing_Bay.Entities
                     break;
             }
 
+            if (_puppet != null)
+                PuppetActivity();
+
             base.Update(gameTime);
         }
         #endregion
+
+        void PuppetActivity()
+        {
+            //_puppet.Enabled = false;
+
+            if (_puppetY)
+            {
+                if (Y > 84f)
+                {
+                    _puppet.Enabled = true;
+                }
+                else if (Y < -84f)
+                {
+                    _puppet.Enabled = true;
+                }
+                else
+                {
+                    //_puppet.Enabled = false;
+                }
+            }
+            else if (_puppetX)
+            {
+                if (X > 145)
+                {
+                    _puppet.Enabled = true;
+                }
+                else if (X < 145)
+                {
+                    _puppet.Enabled = true;
+                }
+                else
+                {
+                    //_puppet.Enabled = false;
+                }
+            }
+        }
 
         void Move()
         {
@@ -128,8 +176,11 @@ namespace Raid_on_Bungleing_Bay.Entities
 
             if (_puppet != null)
             {
-                _puppet.Position = Position + _puppet.PuppetOffset;
-                _puppet.Rotation = Rotation;
+                if (_puppet.Enabled)
+                {
+                    _puppet.Position = Position + _puppet.PuppetOffset;
+                    _puppet.Rotation = Rotation;
+                }
             }
 
             if (_searchForPlayerTimer.Elapsed)
@@ -162,7 +213,8 @@ namespace Raid_on_Bungleing_Bay.Entities
 
                     if (_puppet != null)
                     {
-                        _puppet.Rotation = Rotation;
+                        if (_puppet.Enabled)
+                            _puppet.Rotation = Rotation;
                     }
                 }
                 else
@@ -210,10 +262,11 @@ namespace Raid_on_Bungleing_Bay.Entities
 
             if (_puppet != null)
             {
-                _puppet.Rotation = Rotation;
+                if (_puppet.Enabled)
+                    _puppet.Rotation = Rotation;
             }
 
-            if (_puppeted)
+            if (_puppeted && _puppet.Enabled)
             {
                 _master.Rotation = Rotation;
             }
@@ -226,10 +279,11 @@ namespace Raid_on_Bungleing_Bay.Entities
 
             if (_puppet != null)
             {
-                _puppet.FireShot(false);
+                if (_puppet.Enabled)
+                    _puppet.FireShot(false);
             }
 
-            if (_puppeted && master)
+            if (_puppeted && master && _puppet.Enabled)
             {
                 _master.FireShot();
             }

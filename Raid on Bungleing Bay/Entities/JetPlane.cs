@@ -17,6 +17,7 @@ namespace Raid_on_Bungleing_Bay.Entities
         Shot _shot;
         Player _player;
         Land _land;
+        JetPlane _master;
         JetPlane _puppetX;
         JetPlane _puppetY;
         Mode _currentMode = Mode.idle;
@@ -33,7 +34,7 @@ namespace Raid_on_Bungleing_Bay.Entities
 
         #endregion
         #region Constructor
-        public JetPlane(Game game, Camera camera, GameLogic gameLogic, bool puppet = false) : base(game, camera)
+        public JetPlane(Game game, Camera camera, GameLogic gameLogic, JetPlane master = null) : base(game, camera)
         {
             _logic = gameLogic;
             _land = gameLogic._land;
@@ -42,9 +43,21 @@ namespace Raid_on_Bungleing_Bay.Entities
             _shot = new Shot(game, camera, gameLogic);
             _searchForPlayerTimer = new Timer(game, 1);
             _changeCourseTimer = new Timer(game, 25);
-            _puppet = puppet;
-            PO.MapSize = new Vector2(_land.BoundingBox.Width, _land.BoundingBox.Height);
             Enabled = false;
+
+            if (master != null)
+            {
+                _puppet = true;
+                _master = master;
+                Enabled = true;
+
+                if (master.PuppetX == null)
+                    master.PuppetX = this;
+                else
+                    master.PuppetY = this;
+            }
+
+            PO.MapSize = new Vector2(_land.BoundingBox.Width, _land.BoundingBox.Height);
         }
         #endregion
         #region Initialize
@@ -60,9 +73,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             if (_puppet)
                 return;
-
-            PuppetX.Update(gameTime);
-            PuppetY.Update(gameTime);
 
             switch (_currentMode)
             {
@@ -94,8 +104,6 @@ namespace Raid_on_Bungleing_Bay.Entities
         {
             _changeCourseTimer.Reset();
             _searchForPlayerTimer.Reset();
-            _puppetX.Enabled = false;
-            _puppetY.Enabled = false;
 
             base.Spawn(position, rotation);
         }
@@ -103,14 +111,14 @@ namespace Raid_on_Bungleing_Bay.Entities
         #region Private/Protected methods
         void Puppets()
         {
-            if (Y > 84f)
+            if (Y > 0)
             {
                 _puppetY.X = X;
                 _puppetY.Y = Y - 250;
                 _puppetY.Z = Z;
                 _puppetY.Enabled = true;
             }
-            else if (Y < -84f)
+            else if (Y < 0)
             {
                 _puppetY.X = X;
                 _puppetY.Y = Y + 250;
@@ -119,17 +127,17 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
             else
             {
-                _puppetY.Enabled = false;
+                //_puppetY.Enabled = false;
             }
 
-            if (X > 145)
+            if (X > 0)
             {
                 _puppetX.X = X - 400;
                 _puppetX.Y = Y;
                 _puppetX.Z = Z;
                 _puppetX.Enabled = true;
             }
-            else if (X < 145)
+            else if (X < 0)
             {
                 _puppetX.X = X + 400;
                 _puppetX.Y = Y;
@@ -138,7 +146,7 @@ namespace Raid_on_Bungleing_Bay.Entities
             }
             else
             {
-                _puppetX.Enabled = false;
+                //_puppetX.Enabled = false;
             }
         }
 
