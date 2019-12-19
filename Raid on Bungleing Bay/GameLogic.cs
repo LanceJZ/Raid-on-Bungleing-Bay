@@ -33,7 +33,9 @@ namespace Raid_on_Bungleing_Bay
         Guns _guns;
         Radars _radars;
         JetPlanes _jetPlanes;
+        Gunboats _gunBoats;
         public Player _player;
+
         bool _devMode = true;
         MapCross _mapCross;
 
@@ -59,6 +61,7 @@ namespace Raid_on_Bungleing_Bay
             _radars = new Radars(game, camera, this);
             _tanks = new Tanks(game, camera, this);
             _jetPlanes = new JetPlanes(game, camera, this);
+            _gunBoats = new Gunboats(game, camera, this);
 
             _mapCross = new MapCross(game, camera);
 
